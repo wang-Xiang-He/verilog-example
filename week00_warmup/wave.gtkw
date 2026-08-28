@@ -1,0 +1,23 @@
+[*] GTKWave save file - counter 波形（分色版）
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week00_warmup\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week00_warmup\wave.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*3.500000 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_counter.
+[sst_width] 240
+[signals_width] 180
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@28
+[color] 3
+tb_counter.clk
+[color] 1
+tb_counter.reset
+@24
+[color] 4
+tb_counter.count[3:0]
+[pattern_trace] 1
+[pattern_trace] 0

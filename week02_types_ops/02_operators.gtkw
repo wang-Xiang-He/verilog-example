@@ -1,0 +1,56 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week02_types_ops\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week02_types_ops\02_operators.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-6.158429 -1 -1 -1 -1 -1 -1 -1
+[treeopen] operators_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@24
+[color] 3
+operators_tb.o_xor
+[color] 1
+operators_tb.o_sub
+[color] 2
+operators_tb.o_shr
+[color] 4
+operators_tb.o_shl
+@28
+[color] 5
+operators_tb.o_red_xor
+[color] 6
+operators_tb.o_red_or
+[color] 7
+operators_tb.o_red_and
+@24
+[color] 3
+operators_tb.o_or
+[color] 1
+operators_tb.o_not
+[color] 2
+operators_tb.o_mul
+@28
+[color] 4
+operators_tb.o_lt
+[color] 5
+operators_tb.o_lnot
+[color] 6
+operators_tb.o_land
+[color] 7
+operators_tb.o_eq
+@24
+[color] 3
+operators_tb.o_and
+[color] 1
+operators_tb.o_add
+[color] 2
+operators_tb.a
+[color] 4
+operators_tb.b
+[pattern_trace] 1
+[pattern_trace] 0

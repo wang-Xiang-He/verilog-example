@@ -1,0 +1,28 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week04_func_param\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week04_func_param\04_macro.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-4.836501 -1 -1 -1 -1 -1 -1 -1
+[treeopen] macro_demo_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@24
+[color] 3
+macro_demo_tb.result
+@28
+[color] 1
+macro_demo_tb.is_running
+@24
+[color] 2
+macro_demo_tb.a
+[color] 4
+macro_demo_tb.b
+[color] 5
+macro_demo_tb.state
+[pattern_trace] 1
+[pattern_trace] 0

@@ -1,0 +1,31 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week02_types_ops\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week02_types_ops\01_vectors.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-5.836501 -1 -1 -1 -1 -1 -1 -1
+[treeopen] vectors_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@28
+[color] 3
+vectors_tb.msb
+@24
+[color] 1
+vectors_tb.middle
+@28
+[color] 2
+vectors_tb.lsb
+@24
+[color] 4
+vectors_tb.low
+[color] 5
+vectors_tb.high
+[color] 6
+vectors_tb.data
+[pattern_trace] 1
+[pattern_trace] 0

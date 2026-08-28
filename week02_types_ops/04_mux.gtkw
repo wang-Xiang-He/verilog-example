@@ -1,0 +1,32 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week02_types_ops\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week02_types_ops\04_mux.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-6.158429 -1 -1 -1 -1 -1 -1 -1
+[treeopen] mux_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@24
+[color] 3
+mux_tb.y4
+[color] 1
+mux_tb.y2
+[color] 2
+mux_tb.d0
+[color] 4
+mux_tb.d1
+[color] 5
+mux_tb.d2
+[color] 6
+mux_tb.d3
+[color] 7
+mux_tb.expect4
+[color] 3
+mux_tb.sel
+[pattern_trace] 1
+[pattern_trace] 0

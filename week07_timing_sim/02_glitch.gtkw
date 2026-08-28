@@ -1,0 +1,22 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week07_timing_sim\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week07_timing_sim\02_glitch.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*0.485427 -1 -1 -1 -1 -1 -1 -1
+[treeopen] glitch_demo_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@28
+[color] 3
+glitch_demo_tb.y_real
+[color] 1
+glitch_demo_tb.y_ideal
+[color] 2
+glitch_demo_tb.a
+[pattern_trace] 1
+[pattern_trace] 0

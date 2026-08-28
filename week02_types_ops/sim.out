@@ -1,0 +1,83 @@
+#! 
+:ivl_version "14.0 (devel)" "(s20260301-322-ga4989d023-dirty)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision - 12;
+:vpi_module "D:\OSS-CA~1\lib\ivl\system.vpi";
+:vpi_module "D:\OSS-CA~1\lib\ivl\vhdl_sys.vpi";
+:vpi_module "D:\OSS-CA~1\lib\ivl\vhdl_textio.vpi";
+:vpi_module "D:\OSS-CA~1\lib\ivl\v2005_math.vpi";
+:vpi_module "D:\OSS-CA~1\lib\ivl\va_math.vpi";
+S_00000200cc77b480 .scope module, "xz_tb" "xz_tb" 2 3;
+ .timescale -9 -12;
+v00000200ce2af700_0 .var "data", 0 0;
+v00000200ce2aeda0_0 .var "enable", 0 0;
+v00000200ce2aebc0_0 .net "from_undriven", 3 0, L_00000200ce2aed00;  1 drivers
+v00000200ce2aeee0_0 .var "never_set", 3 0;
+v00000200ce2af020_0 .net "tri_out", 0 0, L_00000200ce2af7a0;  1 drivers
+o00000200ce2b1078 .functor BUFZ 1, c4<z>; HiZ drive
+v00000200ce2aec60_0 .net "undriven", 0 0, o00000200ce2b1078;  0 drivers
+S_00000200cc77db40 .scope module, "uut" "xz" 2 11, 3 12 0, S_00000200cc77b480;
+ .timescale -9 -12;
+    .port_info 0 /INPUT 1 "data";
+    .port_info 1 /INPUT 1 "enable";
+    .port_info 2 /INPUT 1 "undriven_in";
+    .port_info 3 /OUTPUT 1 "tri_out";
+    .port_info 4 /OUTPUT 4 "from_undriven";
+o00000200ce2b0f88 .functor BUFZ 1, c4<z>; HiZ drive
+; Elide local net with no drivers, v00000200ce2afa20_0 name=_ivl_0
+v00000200ce2af200_0 .net "data", 0 0, v00000200ce2af700_0;  1 drivers
+v00000200ce2aeb20_0 .net "enable", 0 0, v00000200ce2aeda0_0;  1 drivers
+v00000200ce2aee40_0 .net "from_undriven", 3 0, L_00000200ce2aed00;  alias, 1 drivers
+v00000200ce2af520_0 .net "tri_out", 0 0, L_00000200ce2af7a0;  alias, 1 drivers
+v00000200ce2af660_0 .net "undriven_in", 0 0, o00000200ce2b1078;  alias, 0 drivers
+L_00000200ce2af7a0 .functor MUXZ 1, o00000200ce2b0f88, v00000200ce2af700_0, v00000200ce2aeda0_0, C4<>;
+L_00000200ce2aed00 .repeat 4, 4, o00000200ce2b1078;
+    .scope S_00000200cc77b480;
+T_0 ;
+    %vpi_call 2 18 "$dumpfile", "wave.vcd" {0 0 0};
+    %vpi_call 2 19 "$dumpvars", 32'sb00000000000000000000000000000000, S_00000200cc77b480 {0 0 0};
+    %vpi_call 2 21 "$display", "\000" {0 0 0};
+    %vpi_call 2 22 "$display", "  ===== z\357\274\232\351\253\230\351\230\273\346\212\227\357\274\210\347\267\232\346\265\256\347\251\272\357\274\214\346\262\222\344\272\272\345\234\250\351\251\205\345\213\225\357\274\211=====" {0 0 0};
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v00000200ce2af700_0, 0, 1;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v00000200ce2aeda0_0, 0, 1;
+    %delay 20000, 0;
+    %vpi_call 2 25 "$display", "   enable=1 data=1  \342\206\222 tri_out = %b   \357\274\210\346\255\243\345\270\270\350\274\270\345\207\272\357\274\211", v00000200ce2af020_0 {0 0 0};
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v00000200ce2af700_0, 0, 1;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v00000200ce2aeda0_0, 0, 1;
+    %delay 20000, 0;
+    %vpi_call 2 28 "$display", "   enable=1 data=0  \342\206\222 tri_out = %b   \357\274\210\346\255\243\345\270\270\350\274\270\345\207\272\357\274\211", v00000200ce2af020_0 {0 0 0};
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v00000200ce2af700_0, 0, 1;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v00000200ce2aeda0_0, 0, 1;
+    %delay 20000, 0;
+    %vpi_call 2 31 "$display", "   enable=0         \342\206\222 tri_out = %b   \342\230\205 z\357\274\201\347\267\232\350\242\253\346\224\276\346\216\211\344\272\206", v00000200ce2af020_0 {0 0 0};
+    %vpi_call 2 33 "$display", "\000" {0 0 0};
+    %vpi_call 2 34 "$display", "  ===== x\357\274\232\346\234\252\347\237\245\357\274\210\346\262\222\350\242\253\350\250\255\345\256\232\351\201\216\357\274\211=====" {0 0 0};
+    %vpi_call 2 35 "$display", "   never_set        = %b   \342\230\205 x\357\274\201reg \345\256\243\345\221\212\344\272\206\345\215\273\346\262\222\347\265\246\345\200\274", v00000200ce2aeee0_0 {0 0 0};
+    %vpi_call 2 36 "$display", "   \346\262\222\346\216\245\347\232\204\347\267\232 undriven = %b   \342\230\205 z\357\274\201wire \346\262\222\344\272\272\351\251\205\345\213\225", v00000200ce2aec60_0 {0 0 0};
+    %vpi_call 2 37 "$display", "   z \344\271\237\346\234\203\345\202\263\346\237\223\357\274\232 {4{undriven}} = %b", v00000200ce2aebc0_0 {0 0 0};
+    %vpi_call 2 38 "$display", "\000" {0 0 0};
+    %pushi/vec4 3, 0, 4;
+    %store/vec4 v00000200ce2aeee0_0, 0, 4;
+    %delay 20000, 0;
+    %vpi_call 2 41 "$display", "   \347\265\246\345\200\274\344\271\213\345\276\214 never_set = %b   \357\274\210x \346\266\210\345\244\261\344\272\206\357\274\211", v00000200ce2aeee0_0 {0 0 0};
+    %vpi_call 2 42 "$display", "\000" {0 0 0};
+    %vpi_call 2 43 "$display", "  \342\230\205\342\230\205 \351\231\244\351\214\257\345\217\243\350\250\243\357\274\232" {0 0 0};
+    %vpi_call 2 44 "$display", "     \346\263\242\345\275\242\345\207\272\347\217\276 x\357\274\210\347\264\205\350\211\262\357\274\211\342\206\222 \345\277\230\344\272\206\347\265\246\345\210\235\345\200\274 / \345\277\230\344\272\206\346\216\245 reset" {0 0 0};
+    %vpi_call 2 45 "$display", "     \346\263\242\345\275\242\345\207\272\347\217\276 z\357\274\210\344\270\255\347\267\232\357\274\211\342\206\222 \345\277\230\344\272\206\346\216\245\347\267\232 / \344\270\211\346\205\213\346\262\222 enable" {0 0 0};
+    %vpi_call 2 46 "$display", "\000" {0 0 0};
+    %delay 20000, 0;
+    %vpi_call 2 48 "$finish" {0 0 0};
+    %end;
+    .thread T_0;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "05_xz_tb.v";
+    "05_xz.v";

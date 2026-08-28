@@ -1,0 +1,44 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week09_memory\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week09_memory\04_fifo.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-7.674445 -1 -1 -1 -1 -1 -1 -1
+[treeopen] fifo_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@24
+[color] 3
+fifo_tb.rd_data
+@28
+[color] 1
+fifo_tb.full
+[color] 2
+fifo_tb.empty
+@24
+[color] 4
+fifo_tb.count
+@22
+[color] 5
+fifo_tb.AW
+[color] 6
+fifo_tb.DW
+@28
+[color] 7
+fifo_tb.clk
+[color] 3
+fifo_tb.rd_en
+[color] 1
+fifo_tb.rst
+@24
+[color] 2
+fifo_tb.wr_data
+@28
+[color] 4
+fifo_tb.wr_en
+[pattern_trace] 1
+[pattern_trace] 0

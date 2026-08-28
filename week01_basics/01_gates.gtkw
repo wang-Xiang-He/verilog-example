@@ -1,0 +1,28 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week01_basics\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week01_basics\01_gates.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-5.158429 -1 -1 -1 -1 -1 -1 -1
+[treeopen] gates_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@28
+[color] 3
+gates_tb.y_xor
+[color] 1
+gates_tb.y_or
+[color] 2
+gates_tb.y_not_a
+[color] 4
+gates_tb.y_and
+[color] 5
+gates_tb.a
+[color] 6
+gates_tb.b
+[pattern_trace] 1
+[pattern_trace] 0

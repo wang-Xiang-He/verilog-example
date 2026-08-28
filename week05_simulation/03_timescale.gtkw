@@ -1,0 +1,22 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week05_simulation\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week05_simulation\03_timescale.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-9.480357 -1 -1 -1 -1 -1 -1 -1
+[treeopen] clk_gen_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@28
+[color] 3
+clk_gen_tb.clk_40ns
+[color] 1
+clk_gen_tb.clk_10ns
+[color] 2
+clk_gen_tb.rst
+[pattern_trace] 1
+[pattern_trace] 0

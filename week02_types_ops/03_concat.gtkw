@@ -1,0 +1,32 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week02_types_ops\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week02_types_ops\03_concat.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-5.836501 -1 -1 -1 -1 -1 -1 -1
+[treeopen] concat_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@24
+[color] 3
+concat_tb.swapped
+[color] 1
+concat_tb.sign_ext
+[color] 2
+concat_tb.reversed
+[color] 4
+concat_tb.repeated
+[color] 5
+concat_tb.mixed
+[color] 6
+concat_tb.joined
+[color] 7
+concat_tb.a
+[color] 3
+concat_tb.b
+[pattern_trace] 1
+[pattern_trace] 0

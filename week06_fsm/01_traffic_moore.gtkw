@@ -1,0 +1,25 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week06_fsm\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week06_fsm\01_traffic_moore.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-7.514573 -1 -1 -1 -1 -1 -1 -1
+[treeopen] traffic_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@24
+[color] 3
+traffic_tb.state_out
+[color] 1
+traffic_tb.light
+@28
+[color] 2
+traffic_tb.clk
+[color] 4
+traffic_tb.rst
+[pattern_trace] 1
+[pattern_trace] 0

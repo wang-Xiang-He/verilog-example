@@ -1,0 +1,28 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week07_timing_sim\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week07_timing_sim\03_cdc_sync.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-0.194447 -1 -1 -1 -1 -1 -1 -1
+[treeopen] cdc_sync_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@28
+[color] 3
+cdc_sync_tb.unsafe_out
+[color] 1
+cdc_sync_tb.sync_ff1
+[color] 2
+cdc_sync_tb.safe_out
+[color] 4
+cdc_sync_tb.async_in
+[color] 5
+cdc_sync_tb.clk_dst
+[color] 6
+cdc_sync_tb.rst
+[pattern_trace] 1
+[pattern_trace] 0

@@ -1,0 +1,24 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week01_basics\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week01_basics\02_half_adder.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-5.158429 -1 -1 -1 -1 -1 -1 -1
+[treeopen] half_adder_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@28
+[color] 3
+half_adder_tb.sum
+[color] 1
+half_adder_tb.carry
+[color] 2
+half_adder_tb.a
+[color] 4
+half_adder_tb.b
+[pattern_trace] 1
+[pattern_trace] 0

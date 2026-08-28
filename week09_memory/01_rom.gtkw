@@ -1,0 +1,25 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week09_memory\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week09_memory\01_rom.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-6.889613 -1 -1 -1 -1 -1 -1 -1
+[treeopen] rom_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@24
+[color] 3
+rom_tb.data_sync
+[color] 1
+rom_tb.data_async
+[color] 2
+rom_tb.addr
+@28
+[color] 4
+rom_tb.clk
+[pattern_trace] 1
+[pattern_trace] 0

@@ -1,0 +1,36 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week04_func_param\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week04_func_param\02_param_counter.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-7.514573 -1 -1 -1 -1 -1 -1 -1
+[treeopen] param_counter_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@28
+[color] 3
+param_counter_tb.t_wide
+[color] 1
+param_counter_tb.t_hex
+[color] 2
+param_counter_tb.t_bcd
+@24
+[color] 4
+param_counter_tb.c_wide
+[color] 5
+param_counter_tb.c_hex
+[color] 6
+param_counter_tb.c_bcd
+@28
+[color] 7
+param_counter_tb.clk
+[color] 3
+param_counter_tb.en
+[color] 1
+param_counter_tb.rst
+[pattern_trace] 1
+[pattern_trace] 0

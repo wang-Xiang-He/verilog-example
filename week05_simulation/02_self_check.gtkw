@@ -1,0 +1,29 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week05_simulation\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week05_simulation\02_self_check.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-13.151651 -1 -1 -1 -1 -1 -1 -1
+[treeopen] alu4_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@28
+[color] 3
+alu4_tb.zero
+@24
+[color] 1
+alu4_tb.y
+[color] 2
+alu4_tb.a
+[color] 4
+alu4_tb.b
+[color] 5
+alu4_tb.golden
+[color] 6
+alu4_tb.op
+[pattern_trace] 1
+[pattern_trace] 0

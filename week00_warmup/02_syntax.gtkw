@@ -1,0 +1,42 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week00_warmup\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week00_warmup\02_syntax.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-5.421464 -1 -1 -1 -1 -1 -1 -1
+[treeopen] syntax_demo_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@24
+[color] 3
+syntax_demo_tb.const_bin
+[color] 1
+syntax_demo_tb.const_dec
+[color] 2
+syntax_demo_tb.const_hex
+[color] 4
+syntax_demo_tb.reversed_f
+[color] 5
+syntax_demo_tb.reversed
+@22
+[color] 6
+syntax_demo_tb.repeated
+@24
+[color] 7
+syntax_demo_tb.ones
+[color] 3
+syntax_demo_tb.mixed
+@22
+[color] 1
+syntax_demo_tb.joined
+@24
+[color] 2
+syntax_demo_tb.a
+[color] 4
+syntax_demo_tb.b
+[pattern_trace] 1
+[pattern_trace] 0

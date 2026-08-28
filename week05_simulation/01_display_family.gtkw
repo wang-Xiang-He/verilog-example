@@ -1,0 +1,24 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week05_simulation\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week05_simulation\01_display_family.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-4.643856 -1 -1 -1 -1 -1 -1 -1
+[treeopen] dut_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@24
+[color] 3
+dut_tb.q
+@28
+[color] 1
+dut_tb.clk
+@24
+[color] 2
+dut_tb.d
+[pattern_trace] 1
+[pattern_trace] 0

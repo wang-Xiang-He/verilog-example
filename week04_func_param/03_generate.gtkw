@@ -1,0 +1,35 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week04_func_param\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week04_func_param\03_generate.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-10.529988 -1 -1 -1 -1 -1 -1 -1
+[treeopen] ripple_adder_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@24
+[color] 3
+ripple_adder_tb.sum
+@22
+[color] 1
+ripple_adder_tb.expected
+@28
+[color] 2
+ripple_adder_tb.cout
+@22
+[color] 4
+ripple_adder_tb.N
+@24
+[color] 5
+ripple_adder_tb.a
+[color] 6
+ripple_adder_tb.b
+@28
+[color] 7
+ripple_adder_tb.cin
+[pattern_trace] 1
+[pattern_trace] 0

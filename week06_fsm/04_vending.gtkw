@@ -1,0 +1,33 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week06_fsm\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week06_fsm\04_vending.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-7.949201 -1 -1 -1 -1 -1 -1 -1
+[treeopen] vending_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@24
+[color] 3
+vending_tb.total_out
+@28
+[color] 1
+vending_tb.dispense
+@24
+[color] 2
+vending_tb.change
+@28
+[color] 4
+vending_tb.clk
+[color] 5
+vending_tb.coin10
+[color] 6
+vending_tb.coin5
+[color] 7
+vending_tb.rst
+[pattern_trace] 1
+[pattern_trace] 0

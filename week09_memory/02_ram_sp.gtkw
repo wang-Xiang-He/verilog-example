@@ -1,0 +1,35 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week09_memory\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week09_memory\02_ram_sp.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-11.214146 -1 -1 -1 -1 -1 -1 -1
+[treeopen] ram_sp_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@24
+[color] 3
+ram_sp_tb.dout
+@22
+[color] 1
+ram_sp_tb.AW
+[color] 2
+ram_sp_tb.DW
+@24
+[color] 4
+ram_sp_tb.addr
+@28
+[color] 5
+ram_sp_tb.clk
+@24
+[color] 6
+ram_sp_tb.din
+@28
+[color] 7
+ram_sp_tb.we
+[pattern_trace] 1
+[pattern_trace] 0

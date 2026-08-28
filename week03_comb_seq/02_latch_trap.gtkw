@@ -1,0 +1,25 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week03_comb_seq\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week03_comb_seq\02_latch_trap.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-6.421464 -1 -1 -1 -1 -1 -1 -1
+[treeopen] latch_trap_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@24
+[color] 3
+latch_trap_tb.good
+[color] 1
+latch_trap_tb.bad
+[color] 2
+latch_trap_tb.d
+@28
+[color] 4
+latch_trap_tb.en
+[pattern_trace] 1
+[pattern_trace] 0

@@ -1,0 +1,39 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week03_comb_seq\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week03_comb_seq\05_shift_reg.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-6.491853 -1 -1 -1 -1 -1 -1 -1
+[treeopen] shift_reg_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@24
+[color] 3
+shift_reg_tb.q
+[color] 1
+shift_reg_tb.HOLD
+[color] 2
+shift_reg_tb.LEFT
+[color] 4
+shift_reg_tb.LOAD
+[color] 5
+shift_reg_tb.RIGHT
+@28
+[color] 6
+shift_reg_tb.clk
+@24
+[color] 7
+shift_reg_tb.load_data
+[color] 3
+shift_reg_tb.mode
+@28
+[color] 1
+shift_reg_tb.rst
+[color] 2
+shift_reg_tb.sin
+[pattern_trace] 1
+[pattern_trace] 0

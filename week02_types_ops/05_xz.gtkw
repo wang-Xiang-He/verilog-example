@@ -1,0 +1,31 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week02_types_ops\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week02_types_ops\05_xz.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-6.158429 -1 -1 -1 -1 -1 -1 -1
+[treeopen] xz_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@28
+[color] 3
+xz_tb.undriven
+[color] 1
+xz_tb.tri_out
+@24
+[color] 2
+xz_tb.from_undriven
+@28
+[color] 4
+xz_tb.data
+[color] 5
+xz_tb.enable
+@24
+[color] 6
+xz_tb.never_set
+[pattern_trace] 1
+[pattern_trace] 0

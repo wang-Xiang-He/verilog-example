@@ -1,0 +1,27 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week05_simulation\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week05_simulation\04_random_test.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-11.480357 -1 -1 -1 -1 -1 -1 -1
+[treeopen] comparator_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@28
+[color] 3
+comparator_tb.lt
+[color] 1
+comparator_tb.gt
+[color] 2
+comparator_tb.eq
+@24
+[color] 4
+comparator_tb.a
+[color] 5
+comparator_tb.b
+[pattern_trace] 1
+[pattern_trace] 0

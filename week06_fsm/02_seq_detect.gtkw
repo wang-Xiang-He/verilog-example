@@ -1,0 +1,33 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week06_fsm\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week06_fsm\02_seq_detect.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-6.704398 -1 -1 -1 -1 -1 -1 -1
+[treeopen] seq_detect_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@24
+[color] 3
+seq_detect_tb.state_out
+@28
+[color] 1
+seq_detect_tb.found_moore
+[color] 2
+seq_detect_tb.found_mealy
+[color] 4
+seq_detect_tb.clk
+[color] 5
+seq_detect_tb.din
+@22
+[color] 6
+seq_detect_tb.pattern
+@28
+[color] 7
+seq_detect_tb.rst
+[pattern_trace] 1
+[pattern_trace] 0

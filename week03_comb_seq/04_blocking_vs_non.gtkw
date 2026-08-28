@@ -1,0 +1,34 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week03_comb_seq\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week03_comb_seq\04_blocking_vs_non.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-5.940838 -1 -1 -1 -1 -1 -1 -1
+[treeopen] blocking_vs_non_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@28
+[color] 3
+blocking_vs_non_tb.q3_nb
+[color] 1
+blocking_vs_non_tb.q3_b
+[color] 2
+blocking_vs_non_tb.q2_nb
+[color] 4
+blocking_vs_non_tb.q2_b
+[color] 5
+blocking_vs_non_tb.q1_nb
+[color] 6
+blocking_vs_non_tb.q1_b
+[color] 7
+blocking_vs_non_tb.clk
+[color] 3
+blocking_vs_non_tb.d
+[color] 1
+blocking_vs_non_tb.rst
+[pattern_trace] 1
+[pattern_trace] 0
