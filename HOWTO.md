@@ -188,6 +188,17 @@ vvp sim.out
 gtkwave 05_xz.gtkw
 ```
 
+**06_operators_all** — 運算子全集（31 個全跑）📖
+```
+iverilog -o sim.out 06_operators_all.v 06_operators_all_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 06_operators_all.gtkw
+```
+
+> `02_operators` 每類只挑代表，這份把 `/ % ** -a ~^ || != > <= >= === !== ~&a ~|a ~^a <<< >>>`
+> 全部補齊，忘記哪個運算子是什麼就跑這個查。
+
 ---
 
 ## 第 3 週：組合與循序邏輯
@@ -542,6 +553,24 @@ gtkwave 04_fifo.gtkw
 | 訊號卡住不動 | latch → 組合 `always` 漏了 `else` 或 `default` |
 | 改了 `.v` 但波形沒變 | 忘記重跑了。**三條要從第一條重跑** |
 | `gtkwave` 說找不到檔案 | 還沒跑 `vvp`，或 `cd` 錯資料夾 |
+| `Unknown module type: xxx` | `-o` 後面漏了輸出檔名，把設計檔吃掉了 → 見下面 ⚠️ |
+
+> [!CAUTION]
+> **`-o` 後面緊跟的那一個是「輸出檔名」，不是輸入檔。**
+>
+> ```
+> iverilog -o 01_gates.v 01_gates_tb.v      ← ✗ 少打 sim.out
+>          ~~~~~~~~~~~~~ 這個位置被當成輸出檔名
+>
+> iverilog -o sim.out 01_gates.v 01_gates_tb.v   ← ✓ 四個字，不是三個
+> ```
+>
+> 打錯的話 iverilog 只會讀到 testbench，找不到設計模組，
+> 就報 `Unknown module type` 加 `These modules were missing`。
+>
+> **編譯失敗時它不會寫輸出檔，所以設計檔通常還活著** —— 但如果那次剛好
+> 編譯成功了，你的 `.v` 就會被執行檔蓋掉。看到這個錯誤先 `dir *.v` 確認
+> 檔案大小正常再繼續。
 
 ---
 

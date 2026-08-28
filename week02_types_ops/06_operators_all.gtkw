@@ -1,0 +1,94 @@
+[*] GTKWave save file (mkgtkw.py 自動產生)
+[dumpfile] "C:\Users\ROY.WANG\Desktop\verilog-example\week02_types_ops\wave.vcd"
+[savefile] "C:\Users\ROY.WANG\Desktop\verilog-example\week02_types_ops\06_operators_all.gtkw"
+[timestart] 0
+[size] 1280 720
+[pos] -1 -1
+*-6.836501 -1 -1 -1 -1 -1 -1 -1
+[treeopen] operators_all_tb.
+[sst_width] 250
+[signals_width] 220
+[sst_expanded] 1
+[pattern_trace] 1
+[pattern_trace] 0
+@24
+[color] 3
+operators_all_tb.o_xor
+[color] 1
+operators_all_tb.o_xnor
+[color] 2
+operators_all_tb.o_sub
+[color] 4
+operators_all_tb.o_shr
+[color] 5
+operators_all_tb.o_shl
+@28
+[color] 6
+operators_all_tb.o_rxor
+[color] 7
+operators_all_tb.o_rxnor
+[color] 3
+operators_all_tb.o_ror
+[color] 1
+operators_all_tb.o_rnor
+[color] 2
+operators_all_tb.o_rnand
+[color] 4
+operators_all_tb.o_rand
+@24
+[color] 5
+operators_all_tb.o_pow
+[color] 6
+operators_all_tb.o_or
+[color] 7
+operators_all_tb.o_not
+[color] 3
+operators_all_tb.o_neg
+@28
+[color] 1
+operators_all_tb.o_ne
+@24
+[color] 2
+operators_all_tb.o_mul
+[color] 4
+operators_all_tb.o_mod
+@28
+[color] 5
+operators_all_tb.o_lt
+[color] 6
+operators_all_tb.o_lor
+[color] 7
+operators_all_tb.o_lnot
+[color] 3
+operators_all_tb.o_le
+[color] 1
+operators_all_tb.o_land
+[color] 2
+operators_all_tb.o_gt
+[color] 4
+operators_all_tb.o_ge
+[color] 5
+operators_all_tb.o_eq
+@24
+[color] 6
+operators_all_tb.o_div
+@28
+[color] 7
+operators_all_tb.o_cne
+[color] 3
+operators_all_tb.o_ceq
+@24
+[color] 1
+operators_all_tb.o_ashr
+[color] 2
+operators_all_tb.o_ashl
+[color] 4
+operators_all_tb.o_and
+[color] 5
+operators_all_tb.o_add
+[color] 6
+operators_all_tb.a
+[color] 7
+operators_all_tb.b
+[pattern_trace] 1
+[pattern_trace] 0
