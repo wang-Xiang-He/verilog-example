@@ -1,0 +1,35 @@
+# ============================================================
+#  Yosys 綜合腳本：把四個模組分別綜合成 iCE40 的資源，印出面積報告
+#
+#  用法：  yosys 01_synth_basic.ys
+#
+#  這個檔是 Yosys 的腳本（.ys），不是 Verilog。
+#  每一行就是一個 Yosys 指令，跟你在 yosys 互動介面裡打的一樣。
+# ============================================================
+
+# ---- 1. 加法器（純組合）----
+read_verilog 01_synth_basic.v
+hierarchy -top adder4
+synth_ice40 -top adder4
+tee -a report.txt stat
+design -reset
+
+# ---- 2. 計數器（有正反器）----
+read_verilog 01_synth_basic.v
+hierarchy -top counter4
+synth_ice40 -top counter4
+tee -a report.txt stat
+design -reset
+
+# ---- 3. 8 位元加法器 ----
+read_verilog 01_synth_basic.v
+hierarchy -top add8
+synth_ice40 -top add8
+tee -a report.txt stat
+design -reset
+
+# ---- 4. 8 位元乘法器（★ 看它多貴）----
+read_verilog 01_synth_basic.v
+hierarchy -top mult8
+synth_ice40 -top mult8
+tee -a report.txt stat

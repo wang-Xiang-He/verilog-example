@@ -1,0 +1,90 @@
+# ============================================================
+#  pins_hx8k.pcf ── 腳位約束檔 (Physical Constraints File)
+#
+#  ★ 這個檔在回答一個問題：
+#     「你的 Verilog 裡叫 led 的那條線，要接到晶片的哪一支腳？」
+#
+#  課本 2.5 節在 Vivado 裡是用滑鼠拉一張表格設定同一件事
+#  （Xilinx 那邊叫 .xdc 檔）。這裡就是純文字檔，一行一支腳。
+#
+#  語法：  set_io <Verilog 裡的埠名稱> <晶片的腳位編號>
+#
+#  目標：iCE40-HX8K，ct256 封裝（共 207 支可用 IO）
+#
+#  ⚠️ 腳位編號【每一塊板子都不一樣】，一定要查你手上那塊板子的
+#     電路圖。這裡用的是 iCE40-HX8K Breakout Board 的官方腳位。
+#
+#  ⚠️ 接錯的後果：輕則不動，重則兩支腳對灌燒掉。
+#     要對著板子的資料表一行一行核對。
+#
+#  ★ 怎麼查某個腳位存不存在？
+#      awk '/^\.pins ct256/{f=1;next} /^\./{if(f)exit} f{print $1}' \
+#          <OSS路徑>/share/icebox/chipdb-8k.txt
+#    我第一次寫這個檔就用了 N1，結果 nextpnr 直接報
+#      ERROR: package does not have a pin named 'N1'
+# ============================================================
+
+# ---- 時脈 ----
+# HX8K Breakout Board 上的 12MHz 石英振盪器
+set_io clk        J3
+
+# ---- LED：向量形式（03_button 用 led[7:0]）----
+# ⚠️ 向量的每一位都要單獨寫一行，不能寫 set_io led B5
+set_io led[0]     B5
+set_io led[1]     B4
+set_io led[2]     A2
+set_io led[3]     A1
+set_io led[4]     C5
+set_io led[5]     C4
+set_io led[6]     B3
+set_io led[7]     C3
+
+# ---- LED：單獨一條（01_blink 用 led / led_fast）----
+# ⚠️ 同一支實體腳可以被不同設計重複使用，
+#    因為一次只會燒一個設計進去。
+set_io led        B5
+set_io led_fast   B4
+
+# ---- PWM 輸出（接 LED 做呼吸燈）----
+set_io pwm_out    B5
+set_io pwm_out2   B4
+
+# ---- 按鍵 ----
+# ⚠️ 這塊板子沒有現成按鍵，要自己接在 PMOD 腳位上。
+#    接法：一端接腳位、一端接 GND，腳位上要有上拉電阻
+#    （或在 Verilog 裡用 SB_IO 原語開內部上拉）。
+set_io btn        C16
+set_io btn2       D16
+
+# ---- 七段顯示器（PMOD，8 條：a b c d e f g dp）----
+set_io seg[0]     T1
+set_io seg[1]     R1
+set_io seg[2]     P1
+set_io seg[3]     M1
+set_io seg[4]     L1
+set_io seg[5]     K1
+set_io seg[6]     J1
+set_io seg[7]     H1
+
+# ---- 七段顯示器的位數選擇（4 位數掃描）----
+set_io digit[0]   T2
+set_io digit[1]   R2
+set_io digit[2]   P2
+set_io digit[3]   N2
+
+# ---- UART ----
+# HX8K Breakout Board 的 FTDI 晶片接在這兩支
+set_io uart_tx    B12
+set_io uart_rx    B10
+
+# ---- 一般用途 ----
+set_io busy       B11
+set_io tick       A11
+set_io heartbeat  A10
+
+# ★ 提醒：設計裡【每一個輸出入埠】都必須在這裡有一行，
+#   少一個 nextpnr 就會直接報錯：
+#     ERROR: IO 'xxx' is unconstrained in PCF
+#   （這是好事 —— 總比讓工具亂接一支腳好）
+#   真的想讓工具自己挑，可以加 --pcf-allow-unconstrained，
+#   但那樣產出來的 bitstream 接到板子上不會動。

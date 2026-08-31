@@ -1,6 +1,6 @@
 [*] GTKWave save file - counter 波形（分色版）
-[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week00_warmup\wave.vcd"
-[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week00_warmup\wave.gtkw"
+[dumpfile] "C:\Users\a9100\Desktop\verilog-example\week00_warmup\wave.vcd"
+[savefile] "C:\Users\a9100\Desktop\verilog-example\week00_warmup\wave.gtkw"
 [timestart] 0
 [size] 1280 720
 [pos] -1 -1

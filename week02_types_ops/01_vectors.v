@@ -20,3 +20,7 @@ module vectors (
     assign middle = data[5:3];
 
 endmodule
+
+//iverilog -o sim.out 01_vectors.v 01_vectors_tb.v
+//vvp sim.out
+//gtkwave 01_vectors.gtkw

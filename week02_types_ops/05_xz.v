@@ -24,3 +24,6 @@ module xz (
     assign from_undriven = {4{undriven_in}};
 
 endmodule
+//iverilog -o sim.out 05_xz.v 05_xz_tb.v
+//vvp sim.out
+//gtkwave 05_xz.gtkw

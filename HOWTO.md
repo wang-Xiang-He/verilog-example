@@ -15,12 +15,12 @@
 
 ## 每次開始工作
 
-到 `C:\Users\ROY.WANG\Desktop\VERI`，**雙擊 `env.bat`**。
+到 `C:\Users\a9100\Desktop\verilog-example`，**雙擊 `env.bat`**。
 
 提示字元要變成這樣才代表環境好了：
 
 ```
-[OSS CAD Suite] C:\Users\ROY.WANG\Desktop\VERI>
+[OSS CAD Suite] C:\Users\a9100\Desktop\verilog-example>
 ```
 
 > [!WARNING]
@@ -201,6 +201,24 @@ gtkwave 06_operators_all.gtkw
 
 ---
 
+### 📁 `07_arith_signed` — 有號 vs 無號 ★ 課本第 7 章
+```
+iverilog -o sim.out 07_arith_signed.v 07_arith_signed_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 07_arith_signed.gtkw
+```
+
+### 📁 `08_fixed_point` — 定點小數與「不用除法器的除法」★
+```
+iverilog -o sim.out 08_fixed_point.v 08_fixed_point_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 08_fixed_point.gtkw
+```
+
+---
+
 ## 第 3 週：組合與循序邏輯
 
 ```
@@ -261,6 +279,86 @@ gtkwave 06_comb_blocking.gtkw
 
 ---
 
+### 組合元件組（課本第 8 章）
+
+### 📁 `07_encoder`
+```
+iverilog -o sim.out 07_encoder.v 07_encoder_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 07_encoder.gtkw
+```
+**編碼器與優先編碼器**（8.1.2）
+### 📁 `08_demux`
+```
+iverilog -o sim.out 08_demux.v 08_demux_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 08_demux.gtkw
+```
+**解多工器**（8.1.5）
+### 📁 `09_comparator`
+```
+iverilog -o sim.out 09_comparator.v 09_comparator_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 09_comparator.gtkw
+```
+**比較器**（8.1.6）★ 有號/無號會判反
+### 📁 `10_accum_mac`
+```
+iverilog -o sim.out 10_accum_mac.v 10_accum_mac_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 10_accum_mac.gtkw
+```
+**累加器與乘加器**（8.1.7/8.1.8）
+### 📁 `11_tristate_inout`
+```
+iverilog -o sim.out 11_tristate_inout.v 11_tristate_inout_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 11_tristate_inout.gtkw
+```
+**三態閘與 inout 雙向埠**（8.1.9/8.1.10）
+### 📁 `12_alu`
+```
+iverilog -o sim.out 12_alu.v 12_alu_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 12_alu.gtkw
+```
+**簡易 ALU**（8.2）
+
+### 循序元件組（課本第 9 章）
+
+### 📁 `13_jk_t_ff`
+```
+iverilog -o sim.out 13_jk_t_ff.v 13_jk_t_ff_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 13_jk_t_ff.gtkw
+```
+**JK 型與 T 型正反器**（9.1.3/9.1.4）
+### 📁 `14_shift_4types`
+```
+iverilog -o sim.out 14_shift_4types.v 14_shift_4types_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 14_shift_4types.gtkw
+```
+**四種移位暫存器** SISO/SIPO/PISO/PIPO（9.2）
+### 📁 `15_freq_div`
+```
+iverilog -o sim.out 15_freq_div.v 15_freq_div_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 15_freq_div.gtkw
+```
+**除頻電路**（9.4）★ 含 50% 工作週期的奇數除頻
+
+---
+
 ## 第 4 週：函式、參數、generate
 
 ```
@@ -298,6 +396,17 @@ echo %ERRORLEVEL%
 vvp sim.out
 gtkwave 04_macro.gtkw
 ```
+
+---
+
+### 📁 `05_verilog2001`
+```
+iverilog -o sim.out 05_verilog2001.v 05_verilog2001_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 05_verilog2001.gtkw
+```
+**Verilog 2001 增強特色**（課本第 13 章）★ 屬性 / 組態 / 常數函式 / `+:` 切片
 
 ---
 
@@ -513,6 +622,274 @@ gtkwave 04_fifo.gtkw
 ---
 
 # 其他
+
+
+### 📁 `05_mem_expand`
+```
+iverilog -o sim.out 05_mem_expand.v 05_mem_expand_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 05_mem_expand.gtkw
+```
+**位元擴充與字組擴充**（12.2/12.5）
+### 📁 `06_stack_queue`
+```
+iverilog -o sim.out 06_stack_queue.v 06_stack_queue_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 06_stack_queue.gtkw
+```
+**堆疊與佇列**（12.3）
+
+---
+
+## 第 10 週：階層式設計
+
+```
+cd week10_hierarchy
+```
+
+### 📁 `01_alu_hier`
+```
+iverilog -o sim.out 01_alu_hier.v 01_alu_hier_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 01_alu_hier.gtkw
+```
+ALU 拆成四顆子模組
+### 📁 `02_datapath`
+```
+iverilog -o sim.out 02_datapath.v 02_datapath_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 02_datapath.gtkw
+```
+★★ 資料路徑 + 控制器分離（移位相加乘法器）
+### 📁 `03_top_integration`
+```
+iverilog -o sim.out 03_top_integration.v 03_top_integration_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 03_top_integration.gtkw
+```
+五個前幾週的模組整合成系統
+### 📁 `04_param_pass`
+```
+iverilog -o sim.out 04_param_pass.v 04_param_pass_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 04_param_pass.gtkw
+```
+參數往下傳三層
+
+---
+
+## 第 11 週：設計合成
+
+```
+cd week11_synthesis
+```
+
+> **本週開始除了模擬還要跑綜合。**
+
+### 📁 `01_synth_basic`
+```
+iverilog -o sim.out 01_synth_basic.v 01_synth_basic_tb.v
+vvp sim.out
+yosys -s 01_synth_basic.ys
+```
+
+### 📁 `02_unsynth` — ⚠️ 模擬要加 `-DSIM_ONLY`
+```
+iverilog -DSIM_ONLY -o sim.out 02_unsynth.v 02_unsynth_tb.v
+vvp sim.out
+02_unsynth.bat
+```
+> 沒加 `-DSIM_ONLY` 會編譯失敗。原因見 week11 的 README。
+
+### 📁 `03_area_compare`
+```
+iverilog -o sim.out 03_area_compare.v 03_area_compare_tb.v
+vvp sim.out
+03_area_compare.bat
+```
+
+### 📁 `04_show_netlist`
+```
+iverilog -o sim.out 04_show_netlist.v 04_show_netlist_tb.v
+vvp sim.out
+04_show_netlist.bat
+```
+> 產生的 `.dot` 檔用 https://dreampuf.github.io/GraphvizOnline/ 看。
+
+---
+
+## 第 12 週：管線式處理
+
+```
+cd week12_pipeline
+```
+
+### 📁 `01_mult_comb`
+```
+iverilog -o sim.out 01_mult_comb.v 01_mult_comb_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 01_mult_comb.gtkw
+```
+單週期乘法器
+### 📁 `02_mult_pipe3`
+```
+iverilog -o sim.out 02_mult_pipe3.v 02_mult_pipe3_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 02_mult_pipe3.gtkw
+```
+三級管線乘法器
+
+### 📁 `03_compare` — ⚠️ 要四個檔一起編
+```
+iverilog -o sim.out 01_mult_comb.v 02_mult_pipe3.v 03_compare.v 03_compare_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+03_compare.bat
+```
+
+### 📁 `04_fir_pipe`
+```
+iverilog -o sim.out 04_fir_pipe.v 04_fir_pipe_tb.v
+vvp sim.out
+04_fir_pipe.bat
+```
+
+---
+
+## 第 13–14 週：ASIC 設計與實作
+
+```
+cd week13_asic
+```
+
+### 📁 `01_generic_synth`
+```
+iverilog -o sim.out 01_generic_synth.v 01_generic_synth_tb.v
+vvp sim.out
+01_generic_synth.bat
+```
+
+### 📁 `02_liberty_map` — 映射到標準元件庫
+```
+02_liberty_map.bat
+```
+> 元件庫在 `tiny_cells.lib`，**打開來看**。
+
+### 📁 `03_sta_concept`
+```
+iverilog -o sim.out 03_sta_concept.v 03_sta_concept_tb.v
+vvp sim.out
+03_sta_concept.bat
+```
+> ⚠️ 這個範例的輸出**故意包含 `[X] VIOLATION`** —— 那是在示範時序不滿足長什麼樣，不是錯誤。
+
+### 📁 `04_formal` — ★ 形式驗證
+```
+iverilog -o sim.out 04_formal.v 04_formal_tb.v
+vvp sim.out
+04_formal.bat
+```
+或分開跑：
+```
+sby -f 04_formal_buggy.sby     ← 預期【失敗】，產生反例波形
+sby -f 04_formal_fixed.sby     ← 預期【成功】，k-induction 證明通過
+```
+> ⚠️ `.sby` 檔**只能用英文**，寫中文會 `UnicodeDecodeError`。
+
+---
+
+## 第 15 週：FPGA 應用實習
+
+```
+cd week15_fpga
+```
+
+### 模擬（和前面一樣）
+```
+iverilog -o sim.out 01_blink.v 01_blink_tb.v
+echo %ERRORLEVEL%
+vvp sim.out
+gtkwave 01_blink.gtkw
+```
+把 `01_blink` 換成 `02_pwm` / `03_button` / `04_seg7` / `05_uart_tx`。
+
+### ★ 產生 bitstream
+```
+build.bat 01_blink   blink
+build.bat 02_pwm     pwm
+build.bat 03_button  button_counter
+build.bat 04_seg7    seg7_top
+build.bat 05_uart_tx uart_tx_top
+```
+> 第二個參數是**頂層模組名**，不是檔名。
+> 腳位定義在 `pins_hx8k.pcf`。
+
+---
+
+## 第 16 週：期末考（專題）
+
+```
+cd week16_final
+```
+
+三選一：
+```
+iverilog -o sim.out 01_uart.v 01_uart_tb.v      ← UART 收發器
+iverilog -o sim.out 02_cpu.v  02_cpu_tb.v       ← 簡易 8-bit CPU
+iverilog -o sim.out 03_vga.v  03_vga_tb.v       ← VGA 訊號產生器
+echo %ERRORLEVEL%
+vvp sim.out
+```
+最後一行會印分數（滿分 100）。
+
+看解答：
+```
+iverilog -o sim.out _answers_uart.v 01_uart_tb.v
+vvp sim.out
+```
+
+---
+
+## 第 17–18 週：佈局繞線與時序分析
+
+```
+cd week17_pnr
+```
+
+### 📁 `01_pnr_flow`
+```
+iverilog -o sim.out 01_pnr_flow.v 01_pnr_flow_tb.v
+vvp sim.out
+01_pnr_flow.bat
+```
+
+### 📁 `02_timing_report` — ★ 本週重點
+```
+02_timing_report.bat
+```
+> 要先跑過 `01_pnr_flow.bat`。
+
+### 📁 `03_optimize`
+```
+iverilog -o sim.out 03_optimize.v 03_optimize_tb.v
+vvp sim.out
+03_optimize.bat
+```
+
+### 📁 `04_utilization`
+```
+04_utilization.bat
+```
+
+---
 
 ## 好用的小技巧
 

@@ -1,0 +1,337 @@
+/* ============================================================
+ *  tiny_cells.lib ── 一個「玩具級」標準元件庫 (Standard Cell Library)
+ *
+ *  ★ 這個檔就是課本第 13-14 週說的「標準元件庫」的最小範例。
+ *
+ *  真實的元件庫（台積電、聯電給的）結構一模一樣，只是：
+ *    - 有幾百到幾千種元件（各種驅動強度的 AND/OR/FF/加法器/…）
+ *    - 每個元件的延遲是一整張二維查表，依「輸入轉換時間」和
+ *      「輸出負載電容」去查（本檔也是這樣做，只是表很小）
+ *    - 還有功耗、雜訊、面積、腳位電容…等幾十個參數
+ *    - 而且是【機密文件】，要簽 NDA 才拿得到
+ *
+ *  本檔的數字是編出來的，只為了讓 Yosys/ABC 跑得起來、
+ *  讓你看懂「面積」和「延遲」是怎麼被算出來的。
+ *
+ *  單位：面積 = 任意單位、時間 = 奈秒 (ns)、電容 = pf
+ * ============================================================ */
+
+library(tiny_cells) {
+
+  /* ---- 全域設定 ---- */
+  delay_model                 : table_lookup;
+  time_unit                   : "1ns";
+  voltage_unit                : "1V";
+  current_unit                : "1mA";
+  pulling_resistance_unit     : "1kohm";
+  leakage_power_unit          : "1nW";
+  capacitive_load_unit(1, pf);
+
+  default_inout_pin_cap       : 0.01;
+  default_input_pin_cap       : 0.01;
+  default_output_pin_cap      : 0.0;
+  default_fanout_load         : 1.0;
+  default_max_transition      : 1.0;
+
+  nom_process                 : 1.0;
+  nom_temperature             : 25.0;
+  nom_voltage                 : 1.0;
+
+  /* ============================================================
+   *  ★ 延遲查表模板
+   *
+   *  真實元件庫的延遲【不是一個固定數字】，而是看兩件事：
+   *    variable_1  輸入訊號的轉換時間（邊緣陡不陡）
+   *    variable_2  輸出接了多少負載電容（後面掛了幾顆閘）
+   *
+   *  接得越多、邊緣越鈍 → 延遲越長。這就是為什麼
+   *  「同一顆閘在不同地方的延遲不一樣」。
+   *
+   *  本檔用 2x2 的最小表；真實的通常是 7x7 或更大。
+   * ============================================================ */
+  lu_table_template(tmpl_2x2) {
+    variable_1 : input_net_transition;
+    variable_2 : total_output_net_capacitance;
+    index_1 ("0.01, 0.5");
+    index_2 ("0.01, 0.5");
+  }
+
+  /* ============================================================
+   *  組合邏輯元件
+   *  ★ 注意 area 和延遲的關係：功能越複雜的閘越大越慢。
+   *    NOT 最便宜，XOR 最貴 —— 真實製程也是這樣。
+   * ============================================================ */
+
+  /* 緩衝器：不改變邏輯，只是把訊號「重新推一次」。
+   * ★ 對映器（ABC）需要它來修驅動力不足的路徑，
+   *   元件庫少了 BUF 常常會直接讓對映失敗。 */
+  cell(BUF) {
+    area : 2;
+    pin(A) { direction : input; capacitance : 0.01; }
+    pin(Y) {
+      direction : output;
+      function  : "A";
+      timing() {
+        related_pin : "A";
+        cell_rise(tmpl_2x2)       { values("0.030, 0.060", "0.040, 0.070"); }
+        rise_transition(tmpl_2x2) { values("0.012, 0.055", "0.017, 0.065"); }
+        cell_fall(tmpl_2x2)       { values("0.030, 0.060", "0.040, 0.070"); }
+        fall_transition(tmpl_2x2) { values("0.012, 0.055", "0.017, 0.065"); }
+      }
+    }
+  }
+
+  cell(NOT) {
+    area : 1;
+    pin(A) { direction : input; capacitance : 0.01; }
+    pin(Y) {
+      direction : output;
+      function  : "!A";
+      timing() {
+        related_pin : "A";
+        cell_rise(tmpl_2x2)       { values("0.020, 0.045", "0.030, 0.055"); }
+        rise_transition(tmpl_2x2) { values("0.010, 0.050", "0.015, 0.060"); }
+        cell_fall(tmpl_2x2)       { values("0.020, 0.045", "0.030, 0.055"); }
+        fall_transition(tmpl_2x2) { values("0.010, 0.050", "0.015, 0.060"); }
+      }
+    }
+  }
+
+  cell(NAND2) {
+    area : 2;
+    pin(A) { direction : input; capacitance : 0.01; }
+    pin(B) { direction : input; capacitance : 0.01; }
+    pin(Y) {
+      direction : output;
+      function  : "!(A&B)";
+      timing() {
+        related_pin : "A";
+        cell_rise(tmpl_2x2)       { values("0.040, 0.070", "0.050, 0.080"); }
+        rise_transition(tmpl_2x2) { values("0.015, 0.060", "0.020, 0.070"); }
+        cell_fall(tmpl_2x2)       { values("0.040, 0.070", "0.050, 0.080"); }
+        fall_transition(tmpl_2x2) { values("0.015, 0.060", "0.020, 0.070"); }
+      }
+      timing() {
+        related_pin : "B";
+        cell_rise(tmpl_2x2)       { values("0.040, 0.070", "0.050, 0.080"); }
+        rise_transition(tmpl_2x2) { values("0.015, 0.060", "0.020, 0.070"); }
+        cell_fall(tmpl_2x2)       { values("0.040, 0.070", "0.050, 0.080"); }
+        fall_transition(tmpl_2x2) { values("0.015, 0.060", "0.020, 0.070"); }
+      }
+    }
+  }
+
+  cell(NOR2) {
+    area : 2;
+    pin(A) { direction : input; capacitance : 0.01; }
+    pin(B) { direction : input; capacitance : 0.01; }
+    pin(Y) {
+      direction : output;
+      function  : "!(A|B)";
+      timing() {
+        related_pin : "A";
+        cell_rise(tmpl_2x2)       { values("0.050, 0.085", "0.060, 0.095"); }
+        rise_transition(tmpl_2x2) { values("0.018, 0.065", "0.022, 0.075"); }
+        cell_fall(tmpl_2x2)       { values("0.050, 0.085", "0.060, 0.095"); }
+        fall_transition(tmpl_2x2) { values("0.018, 0.065", "0.022, 0.075"); }
+      }
+      timing() {
+        related_pin : "B";
+        cell_rise(tmpl_2x2)       { values("0.050, 0.085", "0.060, 0.095"); }
+        rise_transition(tmpl_2x2) { values("0.018, 0.065", "0.022, 0.075"); }
+        cell_fall(tmpl_2x2)       { values("0.050, 0.085", "0.060, 0.095"); }
+        fall_transition(tmpl_2x2) { values("0.018, 0.065", "0.022, 0.075"); }
+      }
+    }
+  }
+
+  cell(AND2) {
+    area : 3;
+    pin(A) { direction : input; capacitance : 0.01; }
+    pin(B) { direction : input; capacitance : 0.01; }
+    pin(Y) {
+      direction : output;
+      function  : "(A&B)";
+      timing() {
+        related_pin : "A";
+        cell_rise(tmpl_2x2)       { values("0.060, 0.095", "0.070, 0.105"); }
+        rise_transition(tmpl_2x2) { values("0.018, 0.065", "0.022, 0.075"); }
+        cell_fall(tmpl_2x2)       { values("0.060, 0.095", "0.070, 0.105"); }
+        fall_transition(tmpl_2x2) { values("0.018, 0.065", "0.022, 0.075"); }
+      }
+      timing() {
+        related_pin : "B";
+        cell_rise(tmpl_2x2)       { values("0.060, 0.095", "0.070, 0.105"); }
+        rise_transition(tmpl_2x2) { values("0.018, 0.065", "0.022, 0.075"); }
+        cell_fall(tmpl_2x2)       { values("0.060, 0.095", "0.070, 0.105"); }
+        fall_transition(tmpl_2x2) { values("0.018, 0.065", "0.022, 0.075"); }
+      }
+    }
+  }
+
+  cell(OR2) {
+    area : 3;
+    pin(A) { direction : input; capacitance : 0.01; }
+    pin(B) { direction : input; capacitance : 0.01; }
+    pin(Y) {
+      direction : output;
+      function  : "(A|B)";
+      timing() {
+        related_pin : "A";
+        cell_rise(tmpl_2x2)       { values("0.070, 0.105", "0.080, 0.115"); }
+        rise_transition(tmpl_2x2) { values("0.020, 0.070", "0.025, 0.080"); }
+        cell_fall(tmpl_2x2)       { values("0.070, 0.105", "0.080, 0.115"); }
+        fall_transition(tmpl_2x2) { values("0.020, 0.070", "0.025, 0.080"); }
+      }
+      timing() {
+        related_pin : "B";
+        cell_rise(tmpl_2x2)       { values("0.070, 0.105", "0.080, 0.115"); }
+        rise_transition(tmpl_2x2) { values("0.020, 0.070", "0.025, 0.080"); }
+        cell_fall(tmpl_2x2)       { values("0.070, 0.105", "0.080, 0.115"); }
+        fall_transition(tmpl_2x2) { values("0.020, 0.070", "0.025, 0.080"); }
+      }
+    }
+  }
+
+  /* ★ XOR 是最貴的基本閘 —— 面積是 NOT 的 5 倍、延遲 6 倍。
+   *   這就是為什麼加法器（一堆 XOR）比 AND/OR 貴那麼多。 */
+  cell(XOR2) {
+    area : 5;
+    pin(A) { direction : input; capacitance : 0.015; }
+    pin(B) { direction : input; capacitance : 0.015; }
+    pin(Y) {
+      direction : output;
+      function  : "(A^B)";
+      timing() {
+        related_pin : "A";
+        cell_rise(tmpl_2x2)       { values("0.120, 0.160", "0.135, 0.175"); }
+        rise_transition(tmpl_2x2) { values("0.025, 0.080", "0.030, 0.090"); }
+        cell_fall(tmpl_2x2)       { values("0.120, 0.160", "0.135, 0.175"); }
+        fall_transition(tmpl_2x2) { values("0.025, 0.080", "0.030, 0.090"); }
+      }
+      timing() {
+        related_pin : "B";
+        cell_rise(tmpl_2x2)       { values("0.120, 0.160", "0.135, 0.175"); }
+        rise_transition(tmpl_2x2) { values("0.025, 0.080", "0.030, 0.090"); }
+        cell_fall(tmpl_2x2)       { values("0.120, 0.160", "0.135, 0.175"); }
+        fall_transition(tmpl_2x2) { values("0.025, 0.080", "0.030, 0.090"); }
+      }
+    }
+  }
+
+  /* 2 選 1 多工器：ASIC 通常有專用元件，比用閘拼便宜 */
+  cell(MUX2) {
+    area : 4;
+    pin(A) { direction : input; capacitance : 0.01; }
+    pin(B) { direction : input; capacitance : 0.01; }
+    pin(S) { direction : input; capacitance : 0.015; }
+    pin(Y) {
+      direction : output;
+      function  : "((A&!S)|(B&S))";
+      timing() {
+        related_pin : "A";
+        cell_rise(tmpl_2x2)       { values("0.090, 0.125", "0.100, 0.135"); }
+        rise_transition(tmpl_2x2) { values("0.020, 0.070", "0.025, 0.080"); }
+        cell_fall(tmpl_2x2)       { values("0.090, 0.125", "0.100, 0.135"); }
+        fall_transition(tmpl_2x2) { values("0.020, 0.070", "0.025, 0.080"); }
+      }
+      timing() {
+        related_pin : "B";
+        cell_rise(tmpl_2x2)       { values("0.090, 0.125", "0.100, 0.135"); }
+        rise_transition(tmpl_2x2) { values("0.020, 0.070", "0.025, 0.080"); }
+        cell_fall(tmpl_2x2)       { values("0.090, 0.125", "0.100, 0.135"); }
+        fall_transition(tmpl_2x2) { values("0.020, 0.070", "0.025, 0.080"); }
+      }
+      timing() {
+        related_pin : "S";
+        cell_rise(tmpl_2x2)       { values("0.110, 0.145", "0.120, 0.155"); }
+        rise_transition(tmpl_2x2) { values("0.022, 0.075", "0.027, 0.085"); }
+        cell_fall(tmpl_2x2)       { values("0.110, 0.145", "0.120, 0.155"); }
+        fall_transition(tmpl_2x2) { values("0.022, 0.075", "0.027, 0.085"); }
+      }
+    }
+  }
+
+  /* ============================================================
+   *  循序邏輯元件
+   *
+   *  ★ DFF 的面積是 NOT 閘的【18 倍】。
+   *    這就是為什麼「多插一級管線」在 ASIC 上比 FPGA 貴得多：
+   *      FPGA 的正反器本來就在那裡，不用白不用；
+   *      ASIC 的每一顆正反器都是實實在在的面積和功耗。
+   * ============================================================ */
+
+  cell(DFF) {
+    area : 18;
+    ff(IQ, IQN) { clocked_on : "CK"; next_state : "D"; }
+    pin(CK) { direction : input; clock : true; capacitance : 0.02; }
+    pin(D)  {
+      direction : input;
+      capacitance : 0.01;
+      /* ★ setup / hold 時間就寫在這裡 —— 第 7 週講的那兩個 */
+      timing() {
+        related_pin  : "CK";
+        timing_type  : setup_rising;
+        rise_constraint(tmpl_2x2) { values("0.050, 0.050", "0.050, 0.050"); }
+        fall_constraint(tmpl_2x2) { values("0.050, 0.050", "0.050, 0.050"); }
+      }
+      timing() {
+        related_pin  : "CK";
+        timing_type  : hold_rising;
+        rise_constraint(tmpl_2x2) { values("0.020, 0.020", "0.020, 0.020"); }
+        fall_constraint(tmpl_2x2) { values("0.020, 0.020", "0.020, 0.020"); }
+      }
+    }
+    pin(Q) {
+      direction : output;
+      function  : "IQ";
+      /* 時脈到輸出的延遲 (clk-to-Q) */
+      timing() {
+        related_pin : "CK";
+        timing_type : rising_edge;
+        cell_rise(tmpl_2x2)       { values("0.100, 0.140", "0.110, 0.150"); }
+        rise_transition(tmpl_2x2) { values("0.020, 0.070", "0.025, 0.080"); }
+        cell_fall(tmpl_2x2)       { values("0.100, 0.140", "0.110, 0.150"); }
+        fall_transition(tmpl_2x2) { values("0.020, 0.070", "0.025, 0.080"); }
+      }
+    }
+  }
+
+  /* 帶非同步低準位清除的 DFF ——
+   * 沒有這一顆的話，寫 always @(posedge clk or negedge rst_n) 就映射不了。
+   * ★ 元件庫裡沒有的東西，綜合工具就變不出來。 */
+  cell(DFFR) {
+    area : 22;
+    ff(IQ, IQN) { clocked_on : "CK"; next_state : "D"; clear : "!RN"; }
+    pin(CK) { direction : input; clock : true; capacitance : 0.02; }
+    pin(RN) { direction : input; capacitance : 0.01; }
+    pin(D)  {
+      direction : input;
+      capacitance : 0.01;
+      timing() {
+        related_pin  : "CK";
+        timing_type  : setup_rising;
+        rise_constraint(tmpl_2x2) { values("0.055, 0.055", "0.055, 0.055"); }
+        fall_constraint(tmpl_2x2) { values("0.055, 0.055", "0.055, 0.055"); }
+      }
+      timing() {
+        related_pin  : "CK";
+        timing_type  : hold_rising;
+        rise_constraint(tmpl_2x2) { values("0.022, 0.022", "0.022, 0.022"); }
+        fall_constraint(tmpl_2x2) { values("0.022, 0.022", "0.022, 0.022"); }
+      }
+    }
+    pin(Q) {
+      direction : output;
+      function  : "IQ";
+      timing() {
+        related_pin : "CK";
+        timing_type : rising_edge;
+        cell_rise(tmpl_2x2)       { values("0.105, 0.145", "0.115, 0.155"); }
+        rise_transition(tmpl_2x2) { values("0.020, 0.070", "0.025, 0.080"); }
+        cell_fall(tmpl_2x2)       { values("0.105, 0.145", "0.115, 0.155"); }
+        fall_transition(tmpl_2x2) { values("0.020, 0.070", "0.025, 0.080"); }
+      }
+    }
+  }
+}

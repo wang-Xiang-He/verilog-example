@@ -1,0 +1,24 @@
+# ============================================================
+#  Formal verification: the BUGGY fifo
+#  Expected result: FAIL (the solver finds a counterexample)
+#
+#  NOTE: this file must stay ASCII-only.
+#  sby reads .sby files using the system locale (cp950 on a
+#  Traditional Chinese Windows), so any Chinese character here
+#  crashes it with UnicodeDecodeError.
+#  The Chinese explanation lives in README.md instead.
+# ============================================================
+
+[options]
+mode bmc
+depth 20
+
+[engines]
+smtbmc z3
+
+[script]
+read -formal 04_formal.v
+prep -top fifo_buggy
+
+[files]
+04_formal.v

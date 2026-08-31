@@ -1,0 +1,49 @@
+# ============================================================
+#  第 17-18 週共用的腳位約束檔（iCE40 HX8K, ct256）
+#  ★ 用法和第 15 週的 pins_hx8k.pcf 一樣
+# ============================================================
+
+set_io clk        J3
+set_io rst_n      C16
+
+set_io a[0]       T1
+set_io a[1]       R1
+set_io a[2]       P1
+set_io a[3]       M1
+set_io a[4]       L1
+set_io a[5]       K1
+set_io a[6]       J1
+set_io a[7]       H1
+
+set_io b[0]       T2
+set_io b[1]       R2
+set_io b[2]       P2
+set_io b[3]       N2
+set_io b[4]       M2
+set_io b[5]       H2
+set_io b[6]       G2
+set_io b[7]       J2
+
+set_io op[0]      D16
+set_io op[1]      E16
+set_io op[2]      F16
+
+set_io led[0]     B5
+set_io led[1]     B4
+set_io led[2]     A2
+set_io led[3]     A1
+set_io led[4]     C5
+set_io led[5]     C4
+set_io led[6]     B3
+set_io led[7]     C3
+
+set_io acc[0]     G16
+set_io acc[1]     H16
+set_io acc[2]     J16
+set_io acc[3]     K16
+set_io acc[4]     L16
+set_io acc[5]     M16
+set_io acc[6]     N16
+set_io acc[7]     P16
+
+set_io busy       B11

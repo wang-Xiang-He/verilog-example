@@ -1,0 +1,34 @@
+# Node（md2pdf 工具用的）
+node_modules/
+
+# ---- 模擬產物 ----
+*.out
+sim_out
+*.vcd
+
+# ---- 綜合／佈局繞線產物 ----
+*.json
+*.asc
+*.bin
+*.rpt
+*.dot
+report*.txt
+
+# ---- 形式驗證產物 ----
+# sby 會為每個 .sby 檔開一個同名資料夾
+week13_asic/04_formal_buggy/
+week13_asic/04_formal_fixed/
+
+# ---- 綜合出來的網表（可重新產生）----
+week11_synthesis/*_mapped.v
+week13_asic/*_mapped.v
+
+# ★ 例外：這些是【教材的一部分】，不是產物，要進版控
+!week07_timing_sim/04_netlist_syn.v
+!_tools/md2pdf/package.json
+!_tools/md2pdf/package-lock.json
+
+# ---- 教科書 PDF ----
+# 105 MB，超過 GitHub 單檔 100 MB 上限，而且是有版權的商業教科書。
+# 檔案留在本機使用，不進版控、不上傳。
+Verilog硬體描述語言數位電路設計實務.pdf

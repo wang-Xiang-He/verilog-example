@@ -22,5 +22,7 @@ module concat (
     assign mixed    = {a[3:2], 2'b01, b};  // 可以夾常數進去
     assign sign_ext = {{4{a[3]}}, a};      // 把最高位複製 4 次接在前面
                                            // 這是「有號數」延伸的標準寫法
-
 endmodule
+//iverilog -o sim.out 03_concat.v 03_concat_tb.v
+//vvp sim.out
+//gtkwave 03_concat.gtkw

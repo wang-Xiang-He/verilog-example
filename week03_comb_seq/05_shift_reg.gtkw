@@ -1,6 +1,6 @@
 [*] GTKWave save file (mkgtkw.py 自動產生)
-[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week03_comb_seq\wave.vcd"
-[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week03_comb_seq\05_shift_reg.gtkw"
+[dumpfile] "C:\Users\a9100\Desktop\verilog-example\week03_comb_seq\wave.vcd"
+[savefile] "C:\Users\a9100\Desktop\verilog-example\week03_comb_seq\05_shift_reg.gtkw"
 [timestart] 0
 [size] 1280 720
 [pos] -1 -1

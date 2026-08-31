@@ -1,0 +1,24 @@
+# ============================================================
+#  Formal verification: the FIXED fifo
+#  Expected result: PASS (proof by k-induction)
+#
+#  "mode prove" is an inductive proof, not "we tested N cycles".
+#  Once it passes, the properties hold for ANY input sequence
+#  of ANY length.
+#
+#  NOTE: ASCII-only, see 04_formal_buggy.sby for why.
+# ============================================================
+
+[options]
+mode prove
+depth 20
+
+[engines]
+smtbmc z3
+
+[script]
+read -formal 04_formal.v
+prep -top fifo_fixed
+
+[files]
+04_formal.v

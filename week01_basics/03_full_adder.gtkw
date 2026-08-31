@@ -1,6 +1,6 @@
 [*] GTKWave save file (mkgtkw.py 自動產生)
-[dumpfile] "C:\Users\ROY.WANG\Desktop\VERI\week01_basics\wave.vcd"
-[savefile] "C:\Users\ROY.WANG\Desktop\VERI\week01_basics\03_full_adder.gtkw"
+[dumpfile] "C:\Users\a9100\Desktop\verilog-example\week01_basics\wave.vcd"
+[savefile] "C:\Users\a9100\Desktop\verilog-example\week01_basics\03_full_adder.gtkw"
 [timestart] 0
 [size] 1280 720
 [pos] -1 -1

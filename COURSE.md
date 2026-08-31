@@ -44,13 +44,13 @@ gtkwave 01_gates.gtkw                            ← 開波形
 | 07 | 時序模擬 | `week07_timing_sim/` | ✅ **已建好** |
 | 08 | 期中考（複習＋綜合題） | `week08_midterm/` | ✅ **已建好** |
 | 09 | 記憶體設計 | `week09_memory/` | ✅ **已建好** |
-| 10 | 階層式設計 | `week10_hierarchy/` | 📋 待建 |
-| 11 | 設計合成 | `week11_synthesis/` | 📋 待建 |
-| 12 | 管線式處理 | `week12_pipeline/` | 📋 待建 |
-| 13–14 | ASIC 設計與實作 | `week13_asic/` | 📋 待建 |
-| 15 | FPGA 應用實習 | `week15_fpga/` | 📋 待建 |
-| 16 | 期末考（專題） | `week16_final/` | 📋 待建 |
-| 17–18 | 佈局繞線與時序分析 | `week17_pnr/` | 📋 待建 |
+| 10 | 階層式設計 | `week10_hierarchy/` | ✅ **已建好** |
+| 11 | 設計合成 | `week11_synthesis/` | ✅ **已建好** |
+| 12 | 管線式處理 | `week12_pipeline/` | ✅ **已建好** |
+| 13–14 | ASIC 設計與實作 | `week13_asic/` | ✅ **已建好** |
+| 15 | FPGA 應用實習 | `week15_fpga/` | ✅ **已建好** |
+| 16 | 期末考（專題） | `week16_final/` | ✅ **已建好** |
+| 17–18 | 佈局繞線與時序分析 | `week17_pnr/` | ✅ **已建好** |
 
 ---
 
@@ -79,7 +79,7 @@ gtkwave 01_gates.gtkw                            ← 開波形
 | | |
 |---|---|
 | **觀念** | `wire` vs `reg` 的真正差別 ・ 四值邏輯 `0 1 x z` ・ 數字表示法 `4'b1010` `8'hFF` ・ 向量與位元切片 `a[3:1]` ・ 串接 `{a,b}` ・ 縮減運算子 `&a` ・ 位移 `<<` `>>` ・ 三元 `? :` ・ 有號 vs 無號 |
-| **範例** | `01_vectors` 向量與切片 ・ `02_operators` 五類運算子 ・ `03_concat` 串接與符號延伸 ・ `04_mux` 三元運算子多工器 ・ `05_xz` x 與 z ・ `06_operators_all` 運算子全集（查表用） |
+| **範例** | `01_vectors` ・ `02_operators` ・ `03_concat` ・ `04_mux` ・ `05_xz` ・ `06_operators_all`<br>**★ 課本第 7 章加課**：`07_arith_signed` 有號vs無號 ・ `08_fixed_point` 定點小數與不用除法器的除法 |
 | **波形重點** | ★ 親眼看到 `x`（未知）和 `z`（高阻抗）長什麼樣 —— 這是初學最常見的除錯線索 |
 | **練習** | 用位移和串接做一個 4-bit 循環左移 ・ 判斷一組數的奇偶（用縮減 XOR） |
 
@@ -88,7 +88,7 @@ gtkwave 01_gates.gtkw                            ← 開波形
 | | |
 |---|---|
 | **觀念** | `always @(*)` 組合 vs `always @(posedge clk)` 循序 ・ ★ 阻塞 `=` vs 非阻塞 `<=` ★ ・ `if` / `case` ・ **latch 陷阱**（漏寫 else 會怎樣） ・ D 型正反器 ・ 移位暫存器 |
-| **範例** | `01_case_mux` case 多工器與解碼器 ・ `02_latch_trap` 故意做出 latch ・ `03_dff` 同步/非同步 reset ・ `04_blocking_vs_non` `=` vs `<=` ・ `05_shift_reg` 移位暫存器 |
+| **範例** | **概念組**：`01_case_mux` ・ `02_latch_trap` ・ `03_dff` ・ `04_blocking_vs_non` ・ `05_shift_reg` ・ `06_comb_blocking`<br>**組合元件組（課本第 8 章）**：`07_encoder` ・ `08_demux` ・ `09_comparator` ・ `10_accum_mac` ・ `11_tristate_inout` ・ `12_alu`<br>**循序元件組（課本第 9 章）**：`13_jk_t_ff` ・ `14_shift_4types` ・ `15_freq_div` |
 | **波形重點** | ★★ `04` 是整週精華：**同樣三行程式碼，`<=` 走 3 拍、`=` 只走 1 拍**，一看就懂 |
 | **練習** | 修好 `02_latch_trap` ・ 環形計數器 ・ 可預載上下數計數器 |
 
@@ -97,7 +97,7 @@ gtkwave 01_gates.gtkw                            ← 開波形
 | | |
 |---|---|
 | **觀念** | `function` vs `task` ・ `parameter` / `localparam` ・ 模組參數化 `#(...)` ・ `generate` 迴圈 ・ 巨集 `` `define `` / `` `include `` / `` `ifdef `` |
-| **範例** | `01_function` 三個實用函式 ・ `02_param_counter` 三種參數同時跑 ・ `03_generate` generate 做 N-bit 加法器 ・ `04_macro` 條件編譯 |
+| **範例** | `01_function` ・ `02_param_counter` ・ `03_generate` ・ `04_macro`<br>**★ 課本第 13 章**：`05_verilog2001` 屬性(Attribute)／組態(Configuration)／常數函式／+: 切片 |
 | **波形重點** | 同一個 `param_counter`，參數改成 4/8/16 位元，波形自動跟著變 |
 | **練習** | function 版半加器 ・ 參數化格雷碼計數器 ・ generate 版優先權編碼器 |
 
@@ -141,7 +141,7 @@ gtkwave 01_gates.gtkw                            ← 開波形
 | | |
 |---|---|
 | **觀念** | ROM vs RAM ・ 同步 vs 非同步讀取 ・ 單埠／雙埠／偽雙埠 ・ 讀寫衝突 ・ FIFO 與空滿判斷 ・ `$readmemh` 初始化 ・ FPGA 的 Block RAM 推斷（怎麼寫才會被綜合成 BRAM） |
-| **範例** | `01_rom` ROM 與同步/非同步讀取 ・ `02_ram_sp` 單埠 RAM ・ `03_ram_dp` 雙埠 RAM ・ `04_fifo` 完整 FIFO 含空滿判斷 |
+| **範例** | `01_rom` ・ `02_ram_sp` ・ `03_ram_dp` ・ `04_fifo`<br>**★ 課本 12.2/12.3/12.5**：`05_mem_expand` 位元與字組擴充 ・ `06_stack_queue` 堆疊與佇列 |
 | **波形重點** | 寫入與讀出差一個時脈的現象；FIFO 快滿時 `full` 旗標跳起來的那一刻 |
 | **練習** | 改 ROM 內容 ・ FIFO 加 almost_full/empty ・ 非同步 FIFO（難） |
 
@@ -150,7 +150,7 @@ gtkwave 01_gates.gtkw                            ← 開波形
 | | |
 |---|---|
 | **觀念** | 由上而下 vs 由下而上 ・ 介面設計 ・ 命名規範 ・ 參數往下傳 ・ 多檔案專案怎麼組織 ・ 跨模組除錯技巧 |
-| **範例** | `01_alu_hier` 4-bit ALU 拆成加法器／邏輯單元／多工器三個子模組 ・ `02_datapath` 資料路徑 + 控制器分離 ・ `03_top_integration` 把前幾週做的東西整合成一個系統 |
+| **範例** | `01_alu_hier` ALU 拆成四顆子模組 ・ ★ `02_datapath` 資料路徑+控制器分離（移位相加乘法器）・ `03_top_integration` 五個模組整合成按鍵計數器 ・ `04_param_pass` 參數往下傳三層 |
 | **波形重點** | 在 GTKWave 樹狀圖中層層往下鑽，追一個訊號穿過三層模組 |
 | **練習** | 把你的 ALU 改成 8-bit（只改參數，不改邏輯） |
 
@@ -160,7 +160,7 @@ gtkwave 01_gates.gtkw                            ← 開波形
 |---|---|
 | **觀念** | RTL → 邏輯閘的過程 ・ **可合成 vs 不可合成語法**（哪些只能模擬） ・ 綜合後面積報告怎麼看 ・ 資源共享與最佳化 ・ 為什麼 `initial` 和 `#delay` 不能合成 |
 | **工具** | ★ 開始用 **Yosys** |
-| **範例** | `01_synth_basic` 綜合第 1 週的加法器看報告 ・ `02_unsynth` 一堆不能合成的寫法示範 ・ `03_area_compare` 三種寫法做同一件事，比面積 ・ `04_show_netlist` 把綜合結果畫成電路圖 |
+| **範例** | `01_synth_basic` 看面積報告（★ 乘法器 158 LUT vs 加法器 8 LUT）・ `02_unsynth` 不能合成的語法（★ 三種嚴重程度）・ `03_area_compare` 資源共用省 41% ・ `04_show_netlist` 畫成電路圖 |
 | **重點產出** | ★ 你會親眼看到自己的程式碼變成「幾個 LUT、幾個 FF」的數字 |
 | **練習** | 想辦法把你的 ALU 面積縮小 20% |
 
@@ -169,7 +169,7 @@ gtkwave 01_gates.gtkw                            ← 開波形
 | | |
 |---|---|
 | **觀念** | 延遲（latency）vs 吞吐量（throughput） ・ 為什麼切管線可以拉高時脈 ・ 管線暫存器 ・ 資料危障 ・ 管線平衡 |
-| **範例** | `01_mult_comb` 單週期乘法器 ・ `02_mult_pipe3` 切成三級管線 ・ `03_compare` 兩者的吞吐量與最高時脈比較（用 Yosys + icetime 實測） |
+| **範例** | `01_mult_comb` 單週期 ・ `02_mult_pipe3` 三級管線 ・ `03_compare` ★ 實測 120→180 MHz（+50%）・ `04_fir_pipe` FIR 濾波器 ★ 實測 65.8→118.5 MHz（+80%） |
 | **波形重點** | ★ 管線的「填充」與「排空」階段；同時有三筆資料在不同級中前進 |
 | **練習** | 把 FIR 濾波器切成管線 |
 
@@ -178,7 +178,7 @@ gtkwave 01_gates.gtkw                            ← 開波形
 | | |
 |---|---|
 | **觀念** | ASIC vs FPGA 全流程對照 ・ 標準元件庫 ・ 邏輯合成 → 佈局規劃 → 繞線 → DRC/LVS ・ 靜態時序分析（STA） ・ 功耗分析 ・ 為什麼一顆晶片要幾千萬 ・ 良率與測試 |
-| **範例** | `01_generic_synth` 綜合成通用邏輯閘網表 ・ `02_liberty_map` 映射到標準元件庫 ・ `03_sta_concept` 時序路徑分析 ・ `04_formal` ★ 用 `sby` 做形式驗證，數學證明你的設計正確 |
+| **範例** | `01_generic_synth` 通用閘網表 ・ `02_liberty_map` 映射到自製元件庫 `tiny_cells.lib`（★ 正反器佔計數器面積 81%）・ `03_sta_concept` setup/hold 算式 + 實測 655/244/116 MHz ・ `04_formal` ★ `sby` 形式驗證，抓出模擬難抓的 FIFO 溢位 bug |
 | **重點產出** | 一份完整的「從 RTL 到網表」的流程紀錄 |
 
 ### 第 15 週 ── FPGA 應用實習
@@ -187,15 +187,15 @@ gtkwave 01_gates.gtkw                            ← 開波形
 |---|---|
 | **觀念** | FPGA 內部結構複習（LUT / FF / 繞線開關） ・ 完整流程 Yosys → nextpnr → icepack ・ 約束檔（腳位對應） ・ 時脈管理 ・ 除彈跳與同步 |
 | **工具** | ★ **nextpnr-ice40** + **icepack** |
-| **範例** | `01_blink` LED 一秒閃一次 ・ `02_pwm` 呼吸燈 ・ `03_button` 按鍵計數 ・ `04_seg7` 七段顯示器 ・ `05_uart_tx` 序列埠送資料 |
+| **範例** | `01_blink` ・ `02_pwm` 呼吸燈 ・ `03_button` ★ 上板三個坑（亞穩態/彈跳/按住）・ `04_seg7` 掃描顯示（★ 只有 19.29 MHz，除法太貴）・ `05_uart_tx` 序列埠<br>**檔案**：`build.bat` 三步驟建置 ・ `pins_hx8k.pcf` 腳位約束 |
 | **重點產出** | ★ **真的產生出 bitstream 檔案**（就算沒有板子，檔案是真的） |
 
 ### 第 16 週 ── 期末考（專題）
 
 | | |
 |---|---|
-| **內容** | 三選一的完整專題，含需求規格、測試平台、評分標準 |
-| **題目** | ① UART 收發器（含鮑率產生器） ② 簡易 8-bit CPU（4 個指令） ③ VGA 訊號產生器 |
+| **內容** | 三選一，每題附空白設計檔 + 自動判分測試平台（滿分 100）+ `_answers/` 解答 |
+| **題目** | ① `01_uart` UART 收發器（鮑率20+發送40+接收40） ② `02_cpu` 簡易 8-bit CPU（LDA/ADD/STA/JMP） ③ `03_vga` VGA 640x480@60Hz 訊號產生器 |
 
 ### 第 17–18 週 ── 佈局繞線與時序分析
 
@@ -203,7 +203,7 @@ gtkwave 01_gates.gtkw                            ← 開波形
 |---|---|
 | **觀念** | 佈局繞線在解什麼問題 ・ 時序約束怎麼寫 ・ **最高時脈怎麼算出來的** ・ 資源使用率報告 ・ 時序收斂技巧 ・ 面積 vs 速度取捨 |
 | **工具** | ★ **nextpnr**（佈局繞線）+ **icetime**（靜態時序分析） |
-| **範例** | `01_pnr_flow` 完整跑一次 ・ `02_timing_report` 讀懂時序報告 ・ `03_optimize` 同一設計三種寫法比最高時脈 ・ `04_utilization` 資源使用率分析 |
+| **範例** | `01_pnr_flow` 拆開流程逐步看 ・ `02_timing_report` ★ 讀懂關鍵路徑（走線延遲是邏輯的 5.8 倍）・ `03_optimize` 三種寫法（★ 手動平衡樹完全沒用，管線 +110%）・ `04_utilization` ★ BRAM vs LUTRAM 差 235 倍 |
 | **重點產出** | ★ 一份你自己設計的電路的**真實時序報告**：這個設計最快能跑幾 MHz |
 
 ---
