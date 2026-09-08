@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NMOS · PMOS · CMOS — 一路疊到 Flip-Flop 和 SRAM</title>
+<style>
+:root{
+  --paper:#EDF0F2; --grid:#DCE3E8; --grid2:#CBD5DC;
+  --ink:#16232E; --ink-soft:#5B6B77; --pale:#A9B7C0;
+  --hot:#C2352B; --hot-bg:#FAE6E3; --rule:#C6D0D7;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px),
+    linear-gradient(var(--grid2) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid2) 1px,transparent 1px);
+  background-size:8px 8px,8px 8px,48px 48px,48px 48px;
+  color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Hiragino Sans CNS","Microsoft JhengHei",sans-serif;
+  font-size:15px;line-height:1.9;-webkit-text-size-adjust:100%;
+}
+.wrap{max-width:1260px;margin:0 auto;padding:28px 20px 72px}
+header{padding:16px 0 10px;border-bottom:2px solid var(--ink)}
+h1{font-size:26px;line-height:1.45;margin:0 0 6px;font-weight:700}
+.sub{color:var(--ink-soft);font-size:14px;margin:0}
+section{margin:30px 0 0;padding:20px 18px;background:rgba(255,255,255,.72);border:1px solid var(--rule)}
+h2{font-size:18px;margin:0 0 4px;font-weight:700;display:flex;gap:10px;align-items:baseline}
+h2 b{font-family:ui-monospace,"SFMono-Regular","Roboto Mono",Menlo,monospace;font-size:13px;font-weight:600;color:var(--hot);flex:none}
+.h2note{color:var(--ink-soft);font-size:13px;margin:0 0 14px;padding-left:26px}
+h3{font-size:15px;margin:22px 0 0;font-weight:700}
+p{margin:12px 0}
+code{font-family:ui-monospace,"Roboto Mono",Menlo,monospace;font-size:13px;background:#E4EAEE;padding:1px 5px;border-radius:2px}
+.fig{width:100%;height:auto;display:block;margin:12px 0 6px;overflow:visible}
+.cap{font-size:12.5px;color:var(--ink-soft);line-height:1.75;margin:2px 0 0}
+
+@media (min-width:980px){
+  section{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);column-gap:38px;align-items:start;padding:24px 26px}
+  section > h2, section > .h2note{grid-column:1 / -1}
+  .pane{grid-column:1;min-width:0}
+  .note{grid-column:2;min-width:0}
+  section.full{display:block}
+  section.full .fig{max-width:860px;margin-left:auto;margin-right:auto}
+}
+.note > :first-child{margin-top:0}
+.pane > :first-child{margin-top:0}
+
+.lead{fill:none;stroke:var(--ink);stroke-width:1.8;stroke-linecap:round}
+.wire{fill:none;stroke:var(--pale);stroke-width:1.8;transition:stroke .18s,stroke-width .18s}
+.wire.act{stroke:var(--ink);stroke-width:3.2}
+.wire.act.hi{stroke:var(--hot);stroke-width:3.2}
+.chan{fill:none;stroke:var(--pale);stroke-width:3;stroke-dasharray:3 5;transition:stroke .18s,stroke-dasharray .18s,stroke-width .18s}
+.chan.on{stroke:var(--ink);stroke-width:4.5;stroke-dasharray:none}
+.chan.on.hi{stroke:var(--hot)}
+.sym{fill:none;stroke:var(--ink);stroke-width:1.8}
+.bub{fill:#fff;stroke:var(--ink);stroke-width:1.8}
+.box{fill:#fff;stroke:var(--ink);stroke-width:1.7}
+.boxq{fill:#fff;stroke:var(--pale);stroke-width:1.6;transition:stroke .18s,fill .18s}
+.boxq.open{stroke:var(--ink);fill:#E7ECEF}
+.lbl{font-family:ui-monospace,"Roboto Mono",Menlo,monospace;font-size:11px;fill:var(--ink-soft)}
+.lbl-i{font-family:ui-monospace,"Roboto Mono",Menlo,monospace;font-size:12.5px;fill:var(--ink);font-weight:600}
+.lbl-zh{font-size:11.5px;fill:var(--ink-soft)}
+.bitnum{font-family:ui-monospace,"Roboto Mono",Menlo,monospace;font-size:19px;font-weight:700;fill:var(--ink)}
+.dot{fill:var(--ink)}
+.hitbox{fill:transparent;cursor:pointer}
+
+.ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0 4px}
+.sw{display:inline-flex;align-items:center;gap:8px;font-family:ui-monospace,"Roboto Mono",Menlo,monospace;font-size:13px;font-weight:600}
+.sw .pill{display:inline-flex;border:1.5px solid var(--ink);background:#fff}
+.sw .pill span{padding:5px 13px;font-size:13px;color:var(--ink-soft);cursor:pointer;user-select:none;line-height:1.4}
+.sw .pill span.on{background:var(--ink);color:#fff}
+.sw .pill span.on.hi{background:var(--hot)}
+.btn{font:inherit;font-size:13.5px;padding:7px 14px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;line-height:1.4}
+.btn:active{background:var(--ink);color:#fff}
+:focus-visible{outline:2px solid var(--hot);outline-offset:2px}
+.readout{margin:14px 0 0;padding:11px 13px;border-left:3px solid var(--hot);background:#fff;font-size:14px}
+.readout b{font-family:ui-monospace,"Roboto Mono",Menlo,monospace}
+.warn{border-left-color:var(--pale);color:var(--ink-soft)}
+
+table{border-collapse:collapse;width:100%;margin:14px 0 0;font-size:13.5px;background:#fff}
+th,td{border:1px solid var(--rule);padding:7px 8px;text-align:left}
+th{font-weight:600;color:var(--ink-soft);font-size:12px;background:#F4F7F8}
+td.c,th.c{text-align:center;font-family:ui-monospace,"Roboto Mono",Menlo,monospace}
+tr.now td{background:#E7ECEF;font-weight:700}
+
+.legend{display:flex;flex-wrap:wrap;gap:8px 24px;margin:12px 0 0;font-size:13px;color:var(--ink-soft)}
+.legend i{display:inline-block;width:26px;height:0;border-top-width:3px;border-top-style:solid;vertical-align:middle;margin-right:6px}
+ul{padding-left:20px;margin:12px 0}
+li{margin:7px 0}
+footer{margin:32px 0 0;padding-top:16px;border-top:1px solid var(--rule);font-size:12.5px;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>NMOS、PMOS、CMOS — 一路疊到 Flip-Flop 和 SRAM</h1>
+  <p class="sub">從一顆電晶體開始，到會記憶的電路。所有圖都可以點。</p>
+</header>
+
+<section class="full">
+  <h2><b>看圖規則</b>先講好顏色代表什麼</h2>
+  <div class="legend">
+    <span><i style="border-color:var(--hot)"></i>粗紅線 ＝ 這條線現在是 1（高電位 VDD）</span>
+    <span><i style="border-color:var(--ink)"></i>粗深線 ＝ 這條線現在是 0（低電位 GND）</span>
+    <span><i style="border-color:var(--pale)"></i>細灰線 ＝ 沒被驅動 / 浮接</span>
+    <span><i style="border-color:var(--pale);border-top-style:dashed"></i>虛線通道 ＝ 電晶體斷開，不通</span>
+  </div>
+  <p class="cap" style="margin-top:12px">「線的顏色」講的是電壓值，「電晶體是實線還虛線」講的是它通不通。這兩件事是分開的。</p>
+</section>
+
+<section>
+  <h2><b>1</b>電晶體就是一個電壓控制的開關</h2>
+  <p class="h2note">MOSFET 有三隻腳：閘極 G、汲極 D、源極 S。G 控制 D 和 S 之間通不通。</p>
+
+  <div class="pane">
+    <svg class="fig" viewBox="0 0 420 170" role="img" aria-label="NMOS 與 PMOS 的導通條件">
+      <text class="lbl-i" x="105" y="20" text-anchor="middle">NMOS</text>
+      <path class="lead" d="M105,44 V32"/><text class="lbl" x="105" y="26" text-anchor="middle">D</text>
+      <path id="nch" class="chan" d="M105,44 V88"/>
+      <path class="lead" d="M105,88 V102"/><text class="lbl" x="105" y="114" text-anchor="middle">S</text>
+      <path class="lead" d="M97,50 V82"/>
+      <path class="lead" d="M97,66 H62"/>
+      <text class="lbl-i" x="56" y="66" text-anchor="end" dominant-baseline="central">G</text>
+      <text id="ntxt" class="lbl-zh" x="105" y="140" text-anchor="middle">G＝0 → 斷開</text>
+      <text class="lbl-zh" x="105" y="158" text-anchor="middle">閘極「高」才通</text>
+
+      <text class="lbl-i" x="300" y="20" text-anchor="middle">PMOS</text>
+      <path class="lead" d="M300,44 V32"/><text class="lbl" x="300" y="26" text-anchor="middle">S</text>
+      <path id="pch" class="chan" d="M300,44 V88"/>
+      <path class="lead" d="M300,88 V102"/><text class="lbl" x="300" y="114" text-anchor="middle">D</text>
+      <path class="lead" d="M292,50 V82"/>
+      <circle class="bub" cx="287" cy="66" r="4.5"/>
+      <path class="lead" d="M282,66 H252"/>
+      <text class="lbl-i" x="246" y="66" text-anchor="end" dominant-baseline="central">G</text>
+      <text id="ptxt" class="lbl-zh" x="300" y="140" text-anchor="middle">G＝0 → 導通</text>
+      <text class="lbl-zh" x="300" y="158" text-anchor="middle">閘極「低」才通（有圈圈）</text>
+    </svg>
+
+    <div class="ctl">
+      <label class="sw">兩顆的閘極電壓 G<span class="pill" data-in="G"><span data-v="0">0</span><span data-v="1">1</span></span></label>
+    </div>
+
+    <table>
+      <thead><tr><th>閘極 G</th><th class="c">NMOS</th><th class="c">PMOS</th></tr></thead>
+      <tbody>
+        <tr id="r0"><td>0（低）</td><td class="c">斷開</td><td class="c">導通</td></tr>
+        <tr id="r1"><td>1（高）</td><td class="c">導通</td><td class="c">斷開</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <p><b>原理：</b>閘極下面隔著一層極薄的<b>氧化層</b>（絕緣體），所以閘極<b>完全沒有電流流進去</b> —— 它就是一片電容。你在閘極加電壓，靠靜電把下方矽基板裡的載子吸過來，形成一條導電通道，D 和 S 就通了。電壓拿掉，通道消失，就斷了。</p>
+    <ul>
+      <li><b>NMOS</b>：通道由電子構成。<b>閘極接高電位才導通。</b></li>
+      <li><b>PMOS</b>：通道由電洞構成。<b>閘極接低電位才導通。</b>符號上那個小圈圈就是在提醒你「反過來」。</li>
+    </ul>
+
+    <h3>一個關鍵缺陷（後面全部靠它推導）</h3>
+    <p>兩種電晶體都不是完美的開關：</p>
+    <ul>
+      <li><b>NMOS 傳 0 很強，傳 1 很爛。</b>它送 1 過去時電壓會掉一個門檻電壓 Vth，只到 VDD−Vth，叫做「弱 1」。</li>
+      <li><b>PMOS 剛好相反：傳 1 很強，傳 0 很爛。</b></li>
+    </ul>
+    <p>所以工程上的解法就是<b>把兩種湊成一對，各做各擅長的事</b> —— 這就是 <b>C</b>omplementary <b>MOS</b>，CMOS 這個字的由來。</p>
+  </div>
+</section>
+
+<section>
+  <h2><b>2</b>符號怎麼讀（為什麼你會看不懂）</h2>
+  <p class="h2note">同一顆電晶體有三套畫法在市面上並行，這是最大的混亂來源。</p>
+
+  <div class="pane">
+    <svg class="fig" viewBox="0 0 420 210" role="img" aria-label="NMOS 的三種符號畫法">
+      <text class="lbl-i" x="10" y="16">NMOS 的三種畫法</text>
+      <g transform="translate(0,10)">
+        <path class="sym" d="M56,50 V102"/>
+        <path class="sym" d="M66,50 V64 M66,69 V83 M66,88 V102"/>
+        <path class="sym" d="M66,54 H86 V38 M66,76 H110 M66,98 H86 V116"/>
+        <path class="sym" d="M56,76 H30"/>
+        <path class="sym" d="M80,70 L88,76 L80,82 Z" fill="var(--ink)"/>
+        <text class="lbl" x="26" y="76" text-anchor="end" dominant-baseline="central">G</text>
+        <text class="lbl" x="86" y="32" text-anchor="middle">D</text>
+        <text class="lbl" x="86" y="128" text-anchor="middle">S</text>
+        <text class="lbl" x="116" y="76" dominant-baseline="central">B</text>
+        <text class="lbl-zh" x="70" y="152" text-anchor="middle">完整四端</text>
+        <text class="lbl-zh" x="70" y="170" text-anchor="middle">箭頭指「進去」＝ N</text>
+      </g>
+      <g transform="translate(148,10)">
+        <path class="sym" d="M56,50 V102"/>
+        <path class="sym" d="M66,50 V64 M66,69 V83 M66,88 V102"/>
+        <path class="sym" d="M66,54 H86 V38 M66,98 H86 V116"/>
+        <path class="sym" d="M56,76 H30"/>
+        <path class="sym" d="M66,76 H86"/>
+        <path class="sym" d="M76,70 L68,76 L76,82 Z" fill="var(--ink)"/>
+        <text class="lbl" x="26" y="76" text-anchor="end" dominant-baseline="central">G</text>
+        <text class="lbl" x="86" y="32" text-anchor="middle">D</text>
+        <text class="lbl" x="86" y="128" text-anchor="middle">S</text>
+        <text class="lbl-zh" x="66" y="152" text-anchor="middle">三端（基體接源極）</text>
+        <text class="lbl-zh" x="66" y="170" text-anchor="middle">箭頭移到源極上</text>
+      </g>
+      <g transform="translate(288,10)">
+        <path class="sym" d="M76,44 V38 M76,44 V88 M76,88 V116"/>
+        <path class="sym" d="M68,50 V82 M68,66 H38"/>
+        <text class="lbl" x="34" y="66" text-anchor="end" dominant-baseline="central">G</text>
+        <text class="lbl" x="76" y="32" text-anchor="middle">D</text>
+        <text class="lbl" x="76" y="128" text-anchor="middle">S</text>
+        <text class="lbl-zh" x="66" y="152" text-anchor="middle">數位簡化版</text>
+        <text class="lbl-zh" x="66" y="170" text-anchor="middle">箭頭全省略</text>
+      </g>
+    </svg>
+
+    <svg class="fig" viewBox="0 0 420 210" role="img" aria-label="PMOS 的三種符號畫法">
+      <text class="lbl-i" x="10" y="16">PMOS 的三種畫法</text>
+      <g transform="translate(0,10)">
+        <path class="sym" d="M56,50 V102"/>
+        <path class="sym" d="M66,50 V64 M66,69 V83 M66,88 V102"/>
+        <path class="sym" d="M66,54 H86 V38 M66,76 H110 M66,98 H86 V116"/>
+        <path class="sym" d="M56,76 H30"/>
+        <path class="sym" d="M96,70 L88,76 L96,82 Z" fill="var(--ink)"/>
+        <text class="lbl" x="26" y="76" text-anchor="end" dominant-baseline="central">G</text>
+        <text class="lbl" x="86" y="32" text-anchor="middle">S</text>
+        <text class="lbl" x="86" y="128" text-anchor="middle">D</text>
+        <text class="lbl" x="116" y="76" dominant-baseline="central">B</text>
+        <text class="lbl-zh" x="70" y="152" text-anchor="middle">完整四端</text>
+        <text class="lbl-zh" x="70" y="170" text-anchor="middle">箭頭指「出來」＝ P</text>
+      </g>
+      <g transform="translate(148,10)">
+        <path class="sym" d="M56,50 V102"/>
+        <path class="sym" d="M66,50 V64 M66,69 V83 M66,88 V102"/>
+        <path class="sym" d="M66,54 H86 V38 M66,98 H86 V116"/>
+        <path class="sym" d="M56,76 H30"/>
+        <path class="sym" d="M66,76 H86"/>
+        <path class="sym" d="M76,70 L84,76 L76,82 Z" fill="var(--ink)"/>
+        <text class="lbl" x="26" y="76" text-anchor="end" dominant-baseline="central">G</text>
+        <text class="lbl" x="86" y="32" text-anchor="middle">S</text>
+        <text class="lbl" x="86" y="128" text-anchor="middle">D</text>
+        <text class="lbl-zh" x="66" y="152" text-anchor="middle">三端</text>
+        <text class="lbl-zh" x="66" y="170" text-anchor="middle">箭頭方向相反</text>
+      </g>
+      <g transform="translate(288,10)">
+        <path class="sym" d="M76,44 V38 M76,44 V88 M76,88 V116"/>
+        <path class="sym" d="M68,50 V82"/>
+        <circle class="bub" cx="63" cy="66" r="4.5"/>
+        <path class="sym" d="M58,66 H38"/>
+        <text class="lbl" x="34" y="66" text-anchor="end" dominant-baseline="central">G</text>
+        <text class="lbl" x="76" y="32" text-anchor="middle">S</text>
+        <text class="lbl" x="76" y="128" text-anchor="middle">D</text>
+        <text class="lbl-zh" x="66" y="152" text-anchor="middle">數位簡化版</text>
+        <text class="lbl-zh" x="66" y="170" text-anchor="middle">改用圈圈區分</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="note">
+    <h3>三個能幫你破解 90% 圖的判讀技巧</h3>
+    <ul>
+      <li><b>看位置。</b>數位電路一律 <b>VDD 在上、GND 在下</b>。畫在<b>上半部、接到 VDD 那排的一定是 PMOS</b>；畫在<b>下半部、接到 GND 那排的一定是 NMOS</b>。連符號都不用看懂，位置就告訴你了。</li>
+      <li><b>看圈圈。</b>閘極旁邊有小圈圈 → PMOS（低電位才開）。沒有 → NMOS。</li>
+      <li><b>看箭頭方向（如果有畫）。</b>箭頭<b>指進去</b>是 <b>N</b>MOS（記成 arrow i<b>N</b>），指出來是 PMOS。但要小心：箭頭有時畫在基體 B 上、有時畫在源極 S 上，位置不同但方向的意義一樣。</li>
+    </ul>
+
+    <h3>還有兩件常讓人卡住的事</h3>
+    <p><b>一、D 和 S 其實是對稱的。</b>製程上這兩端一模一樣，誰是源極誰是汲極是<b>由電壓決定的</b>：NMOS 電位低的那端叫 S，PMOS 電位高的那端叫 S。所以你會看到 NMOS 的 S 永遠朝下接 GND、PMOS 的 S 永遠朝上接 VDD —— 不是規定，是結果。</p>
+    <p><b>二、圖上同名的標籤代表接在一起。</b>複雜的圖不會把每條線都畫出來，而是在兩個地方各寫一個 <code>A</code>，代表它們是同一個節點。這不是省略錯誤，是標準畫法。</p>
+    <p>另外，兩條線交叉但<b>沒有黑點</b>＝只是視覺上疊到，並沒有相連；<b>有黑點</b>才是真的接在一起。</p>
+  </div>
+</section>
+
+<section>
+  <h2><b>3</b>CMOS 反相器：只要兩顆</h2>
+  <p class="h2note">PMOS 在上負責拉高，NMOS 在下負責拉低。撥撥看 IN。</p>
+
+  <div class="pane">
+    <svg class="fig" viewBox="0 0 420 300" role="img" aria-label="CMOS 反相器電路">
+      <path class="wire act hi" d="M130,34 H300"/>
+      <text class="lbl-i" x="308" y="34" dominant-baseline="central">VDD</text>
+      <path class="wire act" d="M130,248 H300"/>
+      <text class="lbl-i" x="308" y="248" dominant-baseline="central">GND</text>
+      <path id="iv_ps" class="wire" d="M210,34 V64"/>
+      <path id="iv_pch" class="chan" d="M210,64 V100"/>
+      <path id="iv_pd" class="wire" d="M210,100 V150"/>
+      <path class="lead" d="M203,70 V94"/>
+      <circle class="bub" cx="198.5" cy="82" r="4.5"/>
+      <path class="lead" d="M194,82 H120"/>
+      <text class="lbl-zh" x="240" y="82" dominant-baseline="central">PMOS（拉高）</text>
+      <path id="iv_nd" class="wire" d="M210,150 V170"/>
+      <path id="iv_nch" class="chan" d="M210,170 V206"/>
+      <path id="iv_ns" class="wire" d="M210,206 V248"/>
+      <path class="lead" d="M203,176 V200"/>
+      <path class="lead" d="M203,188 H120"/>
+      <text class="lbl-zh" x="240" y="188" dominant-baseline="central">NMOS（拉低）</text>
+      <path id="iv_in" class="wire act" d="M120,82 V188"/>
+      <path id="iv_in2" class="wire act" d="M120,135 H50"/>
+      <text class="lbl-i" x="44" y="135" text-anchor="end" dominant-baseline="central">IN</text>
+      <circle class="dot" cx="210" cy="150" r="4"/>
+      <path id="iv_out" class="wire act" d="M210,150 H340"/>
+      <text class="lbl-i" x="366" y="128" text-anchor="middle">OUT</text>
+      <text id="iv_outnum" class="bitnum" x="366" y="150" text-anchor="middle" dominant-baseline="central">1</text>
+    </svg>
+    <div class="ctl">
+      <label class="sw">IN<span class="pill" data-in="IV"><span data-v="0">0</span><span data-v="1">1</span></span></label>
+    </div>
+    <div class="readout" id="ivRead"></div>
+  </div>
+
+  <div class="note">
+    <p><b>為什麼這是整個數位世界的地基：</b>不管 IN 是 0 還是 1，<b>永遠只有一顆導通、另一顆斷開</b>。從 VDD 到 GND 之間永遠是斷的，所以<b>靜止不動時幾乎不耗電</b>。</p>
+    <p>只有在切換的那一瞬間才會耗電（要幫下一級的閘極電容充放電）。這就是動態功耗公式 <code>P = α·C·V²·f</code> 的來源，也一次解釋了三件事：</p>
+    <ul>
+      <li>頻率越高越燙（f 在分子上）</li>
+      <li>閒置的電路不太耗電（α 是切換率）</li>
+      <li><b>降電壓省電最有效</b>，因為 V 是平方</li>
+    </ul>
+    <p>這也是為什麼手機 SoC 會拚命做 DVFS（動態調整電壓頻率）、以及為什麼製程每次微縮都要把工作電壓一起降下來。</p>
+  </div>
+</section>
+
+<section>
+  <h2><b>4</b>NAND：四顆，以及對偶原則</h2>
+  <p class="h2note">上面兩顆 PMOS 並聯、下面兩顆 NMOS 串聯。撥 A、B 看通路。</p>
+
+  <div class="pane">
+    <svg class="fig" viewBox="0 0 420 330" role="img" aria-label="CMOS 二輸入 NAND 電路">
+      <path class="wire act hi" d="M140,34 H290"/>
+      <text class="lbl-i" x="298" y="34" dominant-baseline="central">VDD</text>
+      <path class="wire act" d="M140,292 H290"/>
+      <text class="lbl-i" x="298" y="292" dominant-baseline="central">GND</text>
+      <path id="na_pas" class="wire" d="M170,34 V64"/>
+      <path id="na_pach" class="chan" d="M170,64 V100"/>
+      <path id="na_pad" class="wire" d="M170,100 V124"/>
+      <path class="lead" d="M163,70 V94"/>
+      <circle class="bub" cx="158.5" cy="82" r="4.5"/>
+      <path class="lead" d="M154,82 H132"/>
+      <text class="lbl-i" x="126" y="82" text-anchor="end" dominant-baseline="central">A</text>
+      <path id="na_pbs" class="wire" d="M250,34 V64"/>
+      <path id="na_pbch" class="chan" d="M250,64 V100"/>
+      <path id="na_pbd" class="wire" d="M250,100 V124"/>
+      <path class="lead" d="M243,70 V94"/>
+      <circle class="bub" cx="238.5" cy="82" r="4.5"/>
+      <path class="lead" d="M234,82 H212"/>
+      <text class="lbl-i" x="206" y="82" text-anchor="end" dominant-baseline="central">B</text>
+      <path id="na_join" class="wire" d="M170,124 H250"/>
+      <path id="na_down" class="wire" d="M210,124 V152"/>
+      <circle class="dot" cx="210" cy="152" r="4"/>
+      <text class="lbl-zh" x="266" y="120" dominant-baseline="central">並聯</text>
+      <path id="na_nad" class="wire" d="M210,152 V172"/>
+      <path id="na_nach" class="chan" d="M210,172 V208"/>
+      <path class="lead" d="M203,178 V202"/>
+      <path class="lead" d="M203,190 H168"/>
+      <text class="lbl-i" x="162" y="190" text-anchor="end" dominant-baseline="central">A</text>
+      <path id="na_mid" class="wire" d="M210,208 V224"/>
+      <path id="na_nbch" class="chan" d="M210,224 V260"/>
+      <path class="lead" d="M203,230 V254"/>
+      <path class="lead" d="M203,242 H168"/>
+      <text class="lbl-i" x="162" y="242" text-anchor="end" dominant-baseline="central">B</text>
+      <path id="na_nbs" class="wire" d="M210,260 V292"/>
+      <text class="lbl-zh" x="248" y="216" dominant-baseline="central">串聯</text>
+      <path id="na_out" class="wire act" d="M210,152 H336"/>
+      <text class="lbl-i" x="362" y="130" text-anchor="middle">OUT</text>
+      <text id="na_outnum" class="bitnum" x="362" y="152" text-anchor="middle" dominant-baseline="central">1</text>
+    </svg>
+    <div class="ctl">
+      <label class="sw">A<span class="pill" data-in="NA"><span data-v="0">0</span><span data-v="1">1</span></span></label>
+      <label class="sw">B<span class="pill" data-in="NB"><span data-v="0">0</span><span data-v="1">1</span></span></label>
+    </div>
+    <div class="readout" id="naRead"></div>
+  </div>
+
+  <div class="note">
+    <p><b>對偶原則（記這一條就夠）：</b>上面那組叫<b>上拉網路</b>（全是 PMOS，負責把輸出接到 VDD），下面那組叫<b>下拉網路</b>（全是 NMOS，負責接到 GND）。</p>
+    <p>這兩組永遠<b>互為對偶</b> —— 下面串聯，上面就並聯；下面並聯，上面就串聯。而且任何時刻只有一組是通的，另一組一定是斷的。</p>
+    <p>照這個規則，NOR 就是反過來：<b>下面兩顆 NMOS 並聯、上面兩顆 PMOS 串聯。</b>你可以自己推推看真值表，會對上。</p>
+    <p><b>還有一個常被問的問題：為什麼晶片裡 NAND 比 AND 多？</b>因為 CMOS 的結構天生就是反相的（輸出一定經過一次反向），所以 NAND / NOR 只要 <b>4 顆</b>電晶體；而 AND 得先做 NAND 再串一顆反相器，變成 <b>6 顆</b>。合成工具會盡量用 NAND / NOR，比較省面積也比較快。</p>
+  </div>
+</section>
+
+<section>
+  <h2><b>5</b>把兩個反相器接成一圈 ＝ 記憶</h2>
+  <p class="h2note">這是整篇的轉折點。點圖翻轉它。</p>
+
+  <div class="pane">
+    <svg class="fig" viewBox="0 0 420 210" role="img" aria-label="交叉耦合反相器">
+      <path id="cc_q" class="wire act" d="M110,70 V130"/>
+      <path id="cc_qb" class="wire act" d="M290,70 V130"/>
+      <path id="cc_a1" class="wire act" d="M110,70 H160"/>
+      <path class="sym" d="M160,50 L160,90 L220,70 Z" fill="#fff"/>
+      <circle class="bub" cx="225" cy="70" r="4.5"/>
+      <path id="cc_a2" class="wire act" d="M229.5,70 H290"/>
+      <path id="cc_b1" class="wire act" d="M290,130 H225"/>
+      <path class="sym" d="M225,110 L225,150 L165,130 Z" fill="#fff"/>
+      <circle class="bub" cx="160.5" cy="130" r="4.5"/>
+      <path id="cc_b2" class="wire act" d="M156,130 H110"/>
+      <circle class="dot" cx="110" cy="70" r="4"/>
+      <circle class="dot" cx="290" cy="130" r="4"/>
+      <text class="lbl-i" x="96" y="86" text-anchor="end">Q</text>
+      <text id="cc_qn" class="bitnum" x="96" y="112" text-anchor="end">0</text>
+      <text class="lbl-i" x="304" y="86">Q̄</text>
+      <text id="cc_qbn" class="bitnum" x="304" y="112">1</text>
+      <text class="lbl-zh" x="210" y="188" text-anchor="middle">點一下翻轉它</text>
+      <rect class="hitbox" id="ccHit" x="90" y="30" width="240" height="140"/>
+    </svg>
+  </div>
+
+  <div class="note">
+    <p>兩顆反相器頭尾相接。假設 Q ＝ 0：上面那顆把 0 反相成 1 送到 Q̄；下面那顆再把 1 反相成 0 送回 Q —— <b>剛好就是原本那個 0</b>。它自己撐住自己了。</p>
+    <p>Q ＝ 1 也同樣成立。所以這個小迴路有<b>兩個穩定狀態</b>，而且只要電源不斷，它會一直待在其中一個。</p>
+    <p><b>這就是「記憶」的物理本質</b>，沒有更神秘的東西了。只要 4 顆電晶體（兩個反相器）。</p>
+    <p><b>SRAM 和 Flip-Flop 的核心都是這一圈</b>，差別只在外面包了什麼 —— 接下來兩段就是在講這件事。</p>
+  </div>
+</section>
+
+<section>
+  <h2><b>6</b>SRAM 6T：加兩顆門，就能存取</h2>
+  <p class="h2note">上面那圈（4 顆）＋ 兩顆看門的 NMOS ＝ 6 顆。</p>
+
+  <div class="pane">
+    <svg class="fig" viewBox="0 0 420 300" role="img" aria-label="六電晶體 SRAM 記憶格">
+      <path id="sr_wl" class="wire" d="M30,32 H390"/>
+      <text class="lbl-i" x="210" y="18" text-anchor="middle">WL 字元線</text>
+      <path id="sr_bl" class="wire" d="M45,52 V270"/>
+      <text class="lbl-i" x="45" y="286" text-anchor="middle">BL</text>
+      <path id="sr_blb" class="wire" d="M375,52 V270"/>
+      <text class="lbl-i" x="375" y="286" text-anchor="middle">B̄L̄</text>
+      <path id="sr_m5t" class="wire" d="M100,80 V62 H45"/>
+      <circle class="dot" cx="45" cy="62" r="3.5"/>
+      <path id="sr_m5c" class="chan" d="M100,80 V116"/>
+      <path id="sr_m5b" class="wire" d="M100,116 V140 H140"/>
+      <path class="lead" d="M107,86 V110"/>
+      <path class="lead" d="M107,98 H125 V32"/>
+      <circle class="dot" cx="125" cy="32" r="3.5"/>
+      <text class="lbl-zh" x="76" y="98" text-anchor="end" dominant-baseline="central">M5</text>
+      <path id="sr_m6t" class="wire" d="M320,80 V62 H375"/>
+      <circle class="dot" cx="375" cy="62" r="3.5"/>
+      <path id="sr_m6c" class="chan" d="M320,80 V116"/>
+      <path id="sr_m6b" class="wire" d="M320,116 V140 H285"/>
+      <path class="lead" d="M313,86 V110"/>
+      <path class="lead" d="M313,98 H300 V32"/>
+      <circle class="dot" cx="300" cy="32" r="3.5"/>
+      <text class="lbl-zh" x="344" y="98" dominant-baseline="central">M6</text>
+      <path id="sr_q" class="wire act" d="M140,140 V200"/>
+      <path id="sr_qb" class="wire act" d="M285,140 V200"/>
+      <path id="sr_i1a" class="wire act" d="M140,140 H170"/>
+      <path class="sym" d="M170,120 L170,160 L225,140 Z" fill="#fff"/>
+      <circle class="bub" cx="230" cy="140" r="4.5"/>
+      <path id="sr_i1b" class="wire act" d="M234.5,140 H285"/>
+      <path id="sr_i2a" class="wire act" d="M285,200 H225"/>
+      <path class="sym" d="M225,180 L225,220 L170,200 Z" fill="#fff"/>
+      <circle class="bub" cx="165.5" cy="200" r="4.5"/>
+      <path id="sr_i2b" class="wire act" d="M161,200 H140"/>
+      <circle class="dot" cx="140" cy="140" r="4"/>
+      <circle class="dot" cx="285" cy="140" r="4"/>
+      <text class="lbl-i" x="128" y="164" text-anchor="end">Q</text>
+      <text id="sr_qn" class="bitnum" x="128" y="190" text-anchor="end">0</text>
+      <text class="lbl-i" x="297" y="164">Q̄</text>
+      <text id="sr_qbn" class="bitnum" x="297" y="190">1</text>
+    </svg>
+    <div class="ctl">
+      <label class="sw">WL<span class="pill" data-in="WL"><span data-v="0">0 關</span><span data-v="1">1 開</span></span></label>
+      <button class="btn" id="w0">從 BL 寫入 0</button>
+      <button class="btn" id="w1">從 BL 寫入 1</button>
+    </div>
+    <div class="readout" id="srRead"></div>
+  </div>
+
+  <div class="note">
+    <p><b>M5 和 M6 就是兩扇門。</b>它們的閘極一起接在<b>字元線 WL</b> 上：WL 拉高，兩扇門同時打開，內部的 Q 和 Q̄ 就接到外面的<b>位元線 BL 和 B̄L̄</b>；WL 放低，門關上，這格就與世隔絕，安安靜靜自己撐著。</p>
+    <ul>
+      <li><b>寫入：</b>先在 BL 和 B̄L̄ 上用強力的驅動器把想要的值推上去，再打開 WL，硬把裡面那圈翻過來。</li>
+      <li><b>讀取：</b>先把 BL 和 B̄L̄ 都預充到高電位，再打開 WL。裡面存 0 的那一側會把對應的位元線稍微拉低一點點，<b>感測放大器</b>偵測到這個微小差值，就知道存的是什麼。</li>
+    </ul>
+    <p><b>回到上一份文件：</b>這就是為什麼「一個 SRAM cell ＝ 6 顆電晶體」。FPGA 裡一顆 2 輸入 LUT 要 4 個 cell ＝ 24 顆；6 輸入 LUT 要 64 個 cell ＝ <b>384 顆電晶體，而且只是拿來存設定的</b>。這也是為什麼 FPGA 比同功能的 ASIC 大很多、慢很多、耗電很多。</p>
+    <p>另外，繞線上每一個開關就是<b>一顆 NMOS 通閘 ＋ 一個控制它的 SRAM cell</b>。整顆 FPGA 有幾千萬個這種東西。</p>
+  </div>
+</section>
+
+<section>
+  <h2><b>7</b>傳輸閘：兩顆湊一對的開關</h2>
+  <p class="h2note">要做 Flip-Flop 之前，先補這個零件。</p>
+
+  <div class="pane">
+    <svg class="fig" viewBox="0 0 420 170" role="img" aria-label="傳輸閘">
+      <path class="wire act" d="M40,85 H130"/>
+      <text class="lbl-i" x="34" y="85" text-anchor="end" dominant-baseline="central">IN</text>
+      <path class="sym" d="M130,50 L130,120 L190,85 Z" fill="#fff"/>
+      <path class="sym" d="M190,50 L190,120 L130,85 Z" fill="#fff"/>
+      <path class="wire act" d="M190,85 H290"/>
+      <text class="lbl-i" x="298" y="85" dominant-baseline="central">OUT</text>
+      <path class="lead" d="M160,50 V26"/>
+      <text class="lbl-i" x="160" y="18" text-anchor="middle">C</text>
+      <path class="lead" d="M160,120 V140"/>
+      <circle class="bub" cx="160" cy="146" r="4.5"/>
+      <path class="lead" d="M160,150.5 V162"/>
+      <text class="lbl-i" x="176" y="158">C̄</text>
+      <text class="lbl-zh" x="160" y="106" text-anchor="middle">NMOS</text>
+      <text class="lbl-zh" x="160" y="72" text-anchor="middle">PMOS</text>
+    </svg>
+  </div>
+
+  <div class="note">
+    <p>還記得第 1 段的缺陷嗎 —— NMOS 傳 1 很爛、PMOS 傳 0 很爛。解法很直接：<b>把一顆 NMOS 和一顆 PMOS 並聯，用互補的訊號控制它們</b>（一個接 C，一個接反相的 C̄）。</p>
+    <p>這樣兩顆會同時開、同時關，而且傳 0 有 NMOS 撐、傳 1 有 PMOS 撐，兩邊都很乾淨、沒有壓降。</p>
+    <p>這個零件叫<b>傳輸閘（transmission gate）</b>，就是一個乾淨的雙向開關。<b>選擇器（mux）幾乎都是用它做的</b> —— 上一份文件裡 LUT 那些選擇器，實體就是這個。</p>
+  </div>
+</section>
+
+<section>
+  <h2><b>8</b>D Flip-Flop：主從架構</h2>
+  <p class="h2note">兩個閂鎖串起來，用相反的時脈。撥 D 和 CLK 試試看。</p>
+
+  <div class="pane">
+    <svg class="fig" viewBox="0 0 420 200" role="img" aria-label="主從式 D 型正反器">
+      <text class="lbl-i" x="14" y="60" dominant-baseline="central">D</text>
+      <path id="df_wd" class="wire act" d="M26,60 H45"/>
+      <rect id="df_tg1" class="boxq" x="45" y="44" width="42" height="32" rx="2"/>
+      <text class="lbl" x="66" y="60" text-anchor="middle" dominant-baseline="central">TG1</text>
+      <path id="df_w1" class="wire" d="M87,60 H105"/>
+      <rect class="box" x="105" y="38" width="88" height="44" rx="2"/>
+      <text class="lbl-zh" x="149" y="53" text-anchor="middle">主鎖存</text>
+      <text id="df_m" class="bitnum" x="149" y="72" text-anchor="middle" dominant-baseline="central">0</text>
+      <path id="df_w2" class="wire" d="M193,60 H213"/>
+      <rect id="df_tg2" class="boxq" x="213" y="44" width="42" height="32" rx="2"/>
+      <text class="lbl" x="234" y="60" text-anchor="middle" dominant-baseline="central">TG2</text>
+      <path id="df_w3" class="wire" d="M255,60 H273"/>
+      <rect class="box" x="273" y="38" width="88" height="44" rx="2"/>
+      <text class="lbl-zh" x="317" y="53" text-anchor="middle">從鎖存</text>
+      <text id="df_s" class="bitnum" x="317" y="72" text-anchor="middle" dominant-baseline="central">0</text>
+      <path id="df_wq" class="wire act" d="M361,60 H385"/>
+      <text class="lbl-i" x="402" y="42" text-anchor="middle">Q</text>
+      <text id="df_q" class="bitnum" x="402" y="62" text-anchor="middle" dominant-baseline="central">0</text>
+      <path id="df_clk" class="wire act" d="M30,150 H234"/>
+      <text class="lbl-i" x="24" y="150" text-anchor="end" dominant-baseline="central">CLK</text>
+      <path class="lead" d="M66,150 V96"/>
+      <circle class="bub" cx="66" cy="90" r="4.5"/>
+      <path class="lead" d="M66,85.5 V76"/>
+      <path class="lead" d="M234,150 V76"/>
+      <circle class="dot" cx="66" cy="150" r="3.5"/>
+      <circle class="dot" cx="234" cy="150" r="3.5"/>
+      <text id="df_t1" class="lbl-zh" x="66" y="176" text-anchor="middle">通</text>
+      <text id="df_t2" class="lbl-zh" x="234" y="176" text-anchor="middle">斷</text>
+    </svg>
+    <div class="ctl">
+      <label class="sw">D<span class="pill" data-in="DD"><span data-v="0">0</span><span data-v="1">1</span></span></label>
+      <label class="sw">CLK<span class="pill" data-in="CK"><span data-v="0">0</span><span data-v="1">1</span></span></label>
+    </div>
+    <div class="readout" id="dfRead"></div>
+  </div>
+
+  <div class="note">
+    <p><b>照著做一次，邊緣觸發就懂了：</b>先把 CLK 放到 <b>0</b>，這時 TG1 開著，你撥 D，主鎖存會跟著變，但 Q 完全不動（因為 TG2 是斷的）。然後把 CLK 撥到 <b>1</b> —— TG1 立刻關上把值鎖住，同時 TG2 打開，那個值才傳到 Q。</p>
+    <p><b>關鍵在於：任何時刻只有一個傳輸閘是通的</b>，所以訊號絕對不可能一路穿過去。它一定要「先進主的、等一個邊緣、再出去」。這就是「正緣觸發」的物理成因 —— 不是什麼抽象規定，就是兩扇門輪流開關而已。</p>
+    <p><b>順便解釋 setup / hold time：</b>D 必須在時脈邊緣<b>之前</b>就穩定夠久，主鎖存裡那個交叉耦合迴路才來得及被推到正確的狀態（setup time）；邊緣之後也要再撐一下，等門真的關緊（hold time）。這兩個數字不是人訂的，是這幾顆電晶體的實體延遲。</p>
+    <p>一顆常見的 D Flip-Flop 大約 <b>20～24 顆電晶體</b>。</p>
+  </div>
+</section>
+
+<section class="full">
+  <h2><b>總結</b>一路疊上來</h2>
+  <table>
+    <thead><tr><th>層級</th><th class="c">電晶體數</th><th>怎麼來的</th></tr></thead>
+    <tbody>
+      <tr><td>NMOS / PMOS</td><td class="c">1</td><td>電壓控制的開關</td></tr>
+      <tr><td>反相器</td><td class="c">2</td><td>PMOS 拉高 ＋ NMOS 拉低</td></tr>
+      <tr><td>NAND / NOR</td><td class="c">4</td><td>上拉與下拉網路互為對偶</td></tr>
+      <tr><td>傳輸閘</td><td class="c">2</td><td>NMOS ∥ PMOS，乾淨的雙向開關</td></tr>
+      <tr><td>交叉耦合閂鎖</td><td class="c">4</td><td>兩個反相器接成一圈 → 會記憶</td></tr>
+      <tr><td>SRAM 記憶格</td><td class="c">6</td><td>閂鎖 ＋ 兩顆看門的 NMOS</td></tr>
+      <tr><td>D Flip-Flop</td><td class="c">約 20～24</td><td>兩個閂鎖 ＋ 傳輸閘，主從輪流開關</td></tr>
+      <tr><td>FPGA 6 輸入 LUT</td><td class="c">約 400＋</td><td>64 個 SRAM 格 ＋ 選擇器樹</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:16px">整條路徑上其實只有<b>兩個真正的觀念</b>：一是「互補」（PMOS 拉高、NMOS 拉低，永遠只有一邊通，所以省電），二是「正回授」（把輸出接回輸入，電路就會記住自己的狀態）。剩下的全部是這兩件事的排列組合。</p>
+</section>
+
+<footer>
+  下次看不懂電路圖時的順序：先找 VDD 和 GND 在哪 → 上半部是 PMOS、下半部是 NMOS → 找閘極的圈圈確認 → 看哪些節點有黑點（真的相連）和哪些只是交叉 → 最後才追訊號。
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var S={G:0,IV:0,NA:0,NB:0,WL:0,Q:0,DD:0,CK:0,M:0,SL:0};
+  function el(id){return document.getElementById(id)}
+  function W(id,act,val){var e=el(id);if(!e)return;e.setAttribute('class','wire'+(act?' act':'')+(act&&val?' hi':''));}
+  function C(id,on,val){var e=el(id);if(!e)return;e.setAttribute('class','chan'+(on?' on':'')+(on&&val?' hi':''));}
+  function N(id,v){var e=el(id);if(!e)return;e.textContent=v;e.setAttribute('fill',v?'#C2352B':'#16232E');}
+  function pills(){
+    document.querySelectorAll('.pill').forEach(function(p){
+      var v=S[p.dataset.in];
+      p.querySelectorAll('span').forEach(function(s){
+        var on=(+s.dataset.v)===v;
+        s.className = on ? ('on'+(v?' hi':'')) : '';
+      });
+    });
+  }
+  function render(){
+    C('nch',S.G===1,0); C('pch',S.G===0,0);
+    el('ntxt').textContent='G＝'+S.G+' → '+(S.G?'導通':'斷開');
+    el('ptxt').textContent='G＝'+S.G+' → '+(S.G?'斷開':'導通');
+    el('r0').className=S.G===0?'now':''; el('r1').className=S.G===1?'now':'';
+
+    var iv=S.IV,out=iv?0:1;
+    C('iv_pch',iv===0,1); C('iv_nch',iv===1,0);
+    W('iv_ps',iv===0,1); W('iv_pd',iv===0,1);
+    W('iv_nd',iv===1,0); W('iv_ns',iv===1,0);
+    W('iv_in',true,iv); W('iv_in2',true,iv); W('iv_out',true,out);
+    N('iv_outnum',out);
+    el('ivRead').innerHTML = iv===0
+      ? 'IN＝<b>0</b>　→　PMOS 導通、NMOS 斷開　→　輸出被<b>拉到 VDD</b>　→　OUT＝<b>1</b>'
+      : 'IN＝<b>1</b>　→　PMOS 斷開、NMOS 導通　→　輸出被<b>拉到 GND</b>　→　OUT＝<b>0</b>';
+
+    var a=S.NA,b=S.NB,no=(a&&b)?0:1;
+    var pa=(a===0),pb=(b===0),pull=(pa||pb),pdn=(a===1&&b===1);
+    C('na_pach',pa,1); C('na_pbch',pb,1);
+    W('na_pas',pa,1); W('na_pad',pa,1); W('na_pbs',pb,1); W('na_pbd',pb,1);
+    W('na_join',pull,1); W('na_down',pull,1);
+    C('na_nach',pdn,0); C('na_nbch',pdn,0);
+    W('na_nad',pdn,0); W('na_mid',pdn,0); W('na_nbs',pdn,0);
+    W('na_out',true,no); N('na_outnum',no);
+    el('naRead').innerHTML = pdn
+      ? 'A＝1、B＝1　→　下面兩顆 NMOS <b>都通</b>，串聯路徑接到 GND，上面兩顆 PMOS 都斷　→　OUT＝<b>0</b>'
+      : 'A＝'+a+'、B＝'+b+'　→　下面串聯路徑<b>斷了</b>，上面至少一顆 PMOS 通，把輸出拉到 VDD　→　OUT＝<b>1</b>';
+
+    N('cc_qn',S.Q); N('cc_qbn',S.Q?0:1);
+    W('cc_q',true,S.Q); W('cc_b2',true,S.Q); W('cc_a1',true,S.Q);
+    W('cc_qb',true,S.Q?0:1); W('cc_a2',true,S.Q?0:1); W('cc_b1',true,S.Q?0:1);
+
+    var wl=S.WL;
+    C('sr_m5c',wl===1,0); C('sr_m6c',wl===1,0);
+    W('sr_wl',true,wl); W('sr_bl',wl===1,0); W('sr_blb',wl===1,0);
+    W('sr_m5t',wl===1,0); W('sr_m5b',wl===1,0);
+    W('sr_m6t',wl===1,0); W('sr_m6b',wl===1,0);
+    N('sr_qn',S.Q); N('sr_qbn',S.Q?0:1);
+    W('sr_q',true,S.Q); W('sr_i1a',true,S.Q); W('sr_i2b',true,S.Q);
+    W('sr_qb',true,S.Q?0:1); W('sr_i1b',true,S.Q?0:1); W('sr_i2a',true,S.Q?0:1);
+    var sr=el('srRead');
+    if(wl){ sr.className='readout';
+      sr.innerHTML='WL＝<b>1</b>　→　M5、M6 <b>兩扇門都開了</b>，裡面的 Q 接到外面的位元線，現在可讀可寫。目前存的是 <b>'+S.Q+'</b>。';
+    }else{ sr.className='readout warn';
+      sr.innerHTML='WL＝<b>0</b>　→　兩扇門<b>關著</b>，這格與外界隔絕，靠自己那圈正回授撐住 <b>'+S.Q+'</b>。這時候寫不進去。';
+    }
+
+    var ck=S.CK,tg1=(ck===0),tg2=(ck===1);
+    el('df_tg1').setAttribute('class','boxq'+(tg1?' open':''));
+    el('df_tg2').setAttribute('class','boxq'+(tg2?' open':''));
+    el('df_t1').textContent=tg1?'通':'斷';
+    el('df_t2').textContent=tg2?'通':'斷';
+    W('df_wd',true,S.DD); W('df_w1',tg1,S.DD);
+    W('df_w2',tg2,S.M); W('df_w3',tg2,S.M);
+    W('df_wq',true,S.SL); W('df_clk',true,ck);
+    N('df_m',S.M); N('df_s',S.SL); N('df_q',S.SL);
+    el('dfRead').innerHTML = ck===0
+      ? 'CLK＝<b>0</b>　→　TG1 通、TG2 斷。主鎖存<b>跟著 D 跑</b>（現在是 '+S.M+'），但輸出 Q 被鎖在 <b>'+S.SL+'</b> 不動。'
+      : 'CLK＝<b>1</b>　→　TG1 斷、TG2 通。主鎖存<b>被鎖住</b>了，它的值 '+S.M+' 傳到輸出，Q＝<b>'+S.SL+'</b>。這時候再怎麼撥 D 都沒用。';
+    pills();
+  }
+  function update(){ if(S.CK===0) S.M=S.DD; else S.SL=S.M; render(); }
+  document.querySelectorAll('.pill span').forEach(function(s){
+    s.addEventListener('click',function(){ S[s.parentNode.dataset.in]=+s.dataset.v; update(); });
+  });
+  el('ccHit').addEventListener('click',function(){ S.Q=S.Q?0:1; render(); });
+  el('w0').addEventListener('click',function(){ if(S.WL) S.Q=0; render(); });
+  el('w1').addEventListener('click',function(){ if(S.WL) S.Q=1; render(); });
+  update();
+})();
+</script>
+</body>
+</html>

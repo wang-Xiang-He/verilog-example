@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LUT · SRAM · Flip-Flop — 它們是怎麼接在一起的</title>
+<style>
+:root{
+  --paper:#EDF0F2; --grid:#DCE3E8; --grid2:#CBD5DC;
+  --ink:#16232E; --ink-soft:#5B6B77; --pale:#A9B7C0;
+  --hot:#C2352B; --hot-bg:#FAE6E3; --rule:#C6D0D7;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    linear-gradient(var(--grid2) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid2) 1px, transparent 1px);
+  background-size:8px 8px, 8px 8px, 48px 48px, 48px 48px;
+  color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Hiragino Sans CNS","Microsoft JhengHei",sans-serif;
+  font-size:15px; line-height:1.9; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:1260px;margin:0 auto;padding:28px 20px 72px}
+header{padding:16px 0 10px;border-bottom:2px solid var(--ink)}
+h1{font-size:26px;line-height:1.45;margin:0 0 6px;font-weight:700}
+.sub{color:var(--ink-soft);font-size:14px;margin:0}
+section{margin:30px 0 0;padding:20px 18px;background:rgba(255,255,255,.72);border:1px solid var(--rule)}
+h2{font-size:18px;margin:0 0 4px;font-weight:700;display:flex;gap:10px;align-items:baseline}
+h2 b{font-family:ui-monospace,"SFMono-Regular","Roboto Mono",Menlo,monospace;font-size:13px;font-weight:600;color:var(--hot);flex:none}
+.h2note{color:var(--ink-soft);font-size:13px;margin:0 0 14px;padding-left:26px}
+h3{font-size:15px;margin:22px 0 0;font-weight:700}
+p{margin:12px 0}
+code{font-family:ui-monospace,"Roboto Mono",Menlo,monospace;font-size:13px;background:#E4EAEE;padding:1px 5px;border-radius:2px}
+.fig{width:100%;height:auto;display:block;margin:12px 0 6px;overflow:visible}
+.cap{font-size:12.5px;color:var(--ink-soft);line-height:1.75;margin:2px 0 0}
+
+/* ── wide layout: figure left, prose right ── */
+@media (min-width:980px){
+  section{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);column-gap:38px;align-items:start;padding:24px 26px}
+  section > h2, section > .h2note{grid-column:1 / -1}
+  .pane{grid-column:1;min-width:0}
+  .note{grid-column:2;min-width:0}
+  section.full{display:block}
+  section.full .fig{max-width:860px;margin-left:auto;margin-right:auto}
+}
+.note > :first-child{margin-top:0}
+.pane > :first-child{margin-top:0}
+
+/* svg */
+.box{fill:#fff;stroke:var(--ink);stroke-width:1.6}
+.wire{fill:none;stroke:var(--pale);stroke-width:1.6;transition:stroke .18s,stroke-width .18s}
+.wire.act{stroke:var(--ink);stroke-width:3}
+.wire.act.hi{stroke:var(--hot);stroke-width:3}
+.mux{fill:#fff;stroke:var(--ink);stroke-width:1.6;transition:fill .18s}
+.mux.act{fill:#E7ECEF}
+.stub{fill:none;stroke:var(--ink-soft);stroke-width:1.4;stroke-dasharray:3 3}
+.lbl{font-family:ui-monospace,"Roboto Mono",Menlo,monospace;font-size:11px;fill:var(--ink-soft)}
+.lbl-i{font-family:ui-monospace,"Roboto Mono",Menlo,monospace;font-size:12px;fill:var(--ink);font-weight:600}
+.lbl-zh{font-size:11.5px;fill:var(--ink-soft)}
+.bitnum{font-family:ui-monospace,"Roboto Mono",Menlo,monospace;font-size:18px;font-weight:700;fill:var(--ink)}
+.dot{fill:var(--ink)}
+.cell rect{fill:#fff;stroke:var(--pale);stroke-width:1.5;transition:fill .18s,stroke .18s}
+.cell text{fill:var(--ink)}
+.cell.one rect{fill:var(--hot-bg);stroke:var(--hot)}
+.cell.one text{fill:var(--hot)}
+.cell{cursor:pointer}
+.cell .ring{fill:none;stroke:none}
+.cell.sel .ring{stroke:var(--ink);stroke-width:1.6;stroke-dasharray:4 3}
+
+/* controls */
+.ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0 4px}
+.sw{display:inline-flex;align-items:center;gap:8px;font-family:ui-monospace,"Roboto Mono",Menlo,monospace;font-size:13px;font-weight:600}
+.sw .pill{display:inline-flex;border:1.5px solid var(--ink);background:#fff}
+.sw .pill span{padding:5px 13px;font-size:13px;color:var(--ink-soft);cursor:pointer;user-select:none;line-height:1.4}
+.sw .pill span.on{background:var(--ink);color:#fff}
+.sw .pill span.on.hi{background:var(--hot)}
+.btn{font:inherit;font-size:13.5px;padding:7px 14px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;line-height:1.4}
+.btn:active{background:var(--ink);color:#fff}
+.btn.clk{border-color:var(--hot);color:var(--hot);font-weight:700}
+.btn.clk:active{background:var(--hot);color:#fff}
+.presets{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 0}
+.presets .btn{padding:5px 11px;font-size:12.5px}
+:focus-visible{outline:2px solid var(--hot);outline-offset:2px}
+.readout{margin:14px 0 0;padding:11px 13px;border-left:3px solid var(--hot);background:#fff;font-size:14px}
+.readout b{font-family:ui-monospace,"Roboto Mono",Menlo,monospace}
+
+table{border-collapse:collapse;width:100%;margin:14px 0 0;font-family:ui-monospace,"Roboto Mono",Menlo,monospace;font-size:13px;background:#fff}
+th,td{border:1px solid var(--rule);padding:6px 4px;text-align:center}
+th{font-weight:600;color:var(--ink-soft);font-size:11.5px;background:#F4F7F8}
+tbody tr{cursor:pointer}
+tbody tr.now td{background:#E7ECEF;font-weight:700}
+tbody tr.now td:first-child{box-shadow:inset 3px 0 0 var(--hot)}
+td.v1{color:var(--hot);font-weight:700}
+
+.scale .row{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--rule);flex-wrap:wrap}
+.scale .row:last-child{border-bottom:1px solid var(--rule)}
+.scale .k{font-family:ui-monospace,"Roboto Mono",Menlo,monospace;font-size:12.5px;width:74px;flex:none;color:var(--ink-soft)}
+.dots{display:flex;flex-wrap:wrap;gap:2px;max-width:330px}
+.dots i{width:8px;height:8px;background:var(--ink);display:block}
+.dots.lite i{background:var(--pale)}
+
+ul{padding-left:20px;margin:12px 0}
+li{margin:7px 0}
+footer{margin:32px 0 0;padding-top:16px;border-top:1px solid var(--rule);font-size:12.5px;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>LUT、SRAM、Flip-Flop — 它們是怎麼接在一起的</h1>
+  <p class="sub">從 FPGA 裡最小的那一塊開始拆。所有圖都可以點。</p>
+</header>
+
+<section class="full">
+  <h2><b>全貌</b>先看這條生產線</h2>
+  <p class="h2note">訊號從左邊的繞線進來，走過 LUT 和 FF，再從右邊回到繞線。</p>
+
+  <svg class="fig" viewBox="0 0 420 170" role="img" aria-label="邏輯單元全貌">
+    <path class="stub" d="M18,20 V150"/>
+    <text class="lbl-zh" x="18" y="164" text-anchor="middle">繞線</text>
+    <path class="wire act" d="M18,62 H72"/>
+    <path class="wire act" d="M18,88 H72"/>
+    <rect class="box" x="72" y="42" width="88" height="66"/>
+    <text class="lbl-i" x="116" y="68" text-anchor="middle">LUT</text>
+    <text class="lbl-zh" x="116" y="88" text-anchor="middle">查表</text>
+    <path class="wire act" d="M160,75 H222"/>
+    <rect class="box" x="222" y="42" width="70" height="66"/>
+    <text class="lbl-i" x="257" y="68" text-anchor="middle">FF</text>
+    <text class="lbl-zh" x="257" y="88" text-anchor="middle">記住</text>
+    <path class="wire act" d="M292,75 H386"/>
+    <path class="stub" d="M402,20 V150"/>
+    <text class="lbl-zh" x="402" y="164" text-anchor="middle">繞線</text>
+    <path class="wire act" d="M200,140 H257 V108"/>
+    <text class="lbl-i" x="196" y="140" text-anchor="end">CLK</text>
+    <path class="stub" d="M116,14 V42"/>
+    <path class="stub" d="M257,14 V42"/>
+    <text class="lbl-zh" x="186" y="10" text-anchor="middle">開機時載入的設定值（SRAM）</text>
+  </svg>
+
+  <p class="cap" style="text-align:center">上面那條虛線是「設定線」，下面粗的是「資料線」。這兩套線是分開的，第 5 段會講。</p>
+</section>
+
+<section>
+  <h2><b>1</b>SRAM cell：一格記憶</h2>
+  <p class="h2note">最小的單位。就是一個 <code>bool</code>。</p>
+
+  <div class="pane">
+    <svg class="fig" viewBox="0 0 420 130" role="img" aria-label="單一 SRAM 位元">
+      <g id="demoCell" class="cell one" tabindex="0" role="button" aria-label="切換這個 SRAM 位元">
+        <rect x="150" y="34" width="70" height="56" rx="2"/>
+        <rect class="ring" x="144" y="28" width="82" height="68"/>
+        <text class="bitnum" x="185" y="62" text-anchor="middle" dominant-baseline="central" style="font-size:26px">1</text>
+      </g>
+      <text class="lbl-zh" x="185" y="112" text-anchor="middle">點一下切換</text>
+      <text class="lbl" x="185" y="22" text-anchor="middle">1 bit</text>
+    </svg>
+  </div>
+
+  <div class="note">
+    <p>一個 SRAM cell 由 <b>6 顆電晶體</b>組成，存一個 0 或 1。它是<b>揮發性</b>的 —— 斷電就忘光。所以 FPGA 板子上一定會看到旁邊放一顆小小的 SPI Flash，開機時負責把設定重新灌進來。</p>
+    <p>（SPI Flash 是什麼？第 6 段有完整說明。）</p>
+    <p>關鍵觀念：<b>FPGA 裡面到處都是 SRAM cell。</b>它們不是拿來存你的資料的，是拿來存「這塊電路要長什麼樣子」的。</p>
+  </div>
+</section>
+
+<section>
+  <h2><b>2</b>LUT：一張查好的表</h2>
+  <p class="h2note">4 個 SRAM cell + 兩層選擇器。點格子改答案，撥 A / B 看訊號走哪條路。</p>
+
+  <div class="pane">
+    <svg class="fig" viewBox="0 0 420 300" role="img" aria-label="2 輸入 LUT">
+      <text class="lbl" x="40" y="20" text-anchor="end">AB</text>
+      <text class="lbl" x="46" y="20">SRAM</text>
+      <text class="lbl-zh" x="213" y="20" text-anchor="middle">兩層選擇器</text>
+      <text class="lbl" x="370" y="122" text-anchor="middle">輸出</text>
+
+      <path id="w0" class="wire" d="M102,49 H150"/>
+      <path id="w1" class="wire" d="M102,111 H150"/>
+      <path id="w2" class="wire" d="M102,173 H150"/>
+      <path id="w3" class="wire" d="M102,235 H150"/>
+      <path id="wm1" class="wire" d="M176,80 H250"/>
+      <path id="wm2" class="wire" d="M176,204 H250"/>
+      <path id="wout" class="wire" d="M276,142 H370"/>
+
+      <text class="lbl" x="40" y="49" text-anchor="end" dominant-baseline="central">00</text>
+      <text class="lbl" x="40" y="111" text-anchor="end" dominant-baseline="central">01</text>
+      <text class="lbl" x="40" y="173" text-anchor="end" dominant-baseline="central">10</text>
+      <text class="lbl" x="40" y="235" text-anchor="end" dominant-baseline="central">11</text>
+
+      <g class="cell" data-bit="0" tabindex="0" role="button" aria-label="切換位元 00">
+        <rect x="46" y="30" width="56" height="38" rx="2"/><rect class="ring" x="41" y="25" width="66" height="48"/>
+        <text class="bitnum" x="74" y="49" text-anchor="middle" dominant-baseline="central">0</text>
+      </g>
+      <g class="cell" data-bit="1" tabindex="0" role="button" aria-label="切換位元 01">
+        <rect x="46" y="92" width="56" height="38" rx="2"/><rect class="ring" x="41" y="87" width="66" height="48"/>
+        <text class="bitnum" x="74" y="111" text-anchor="middle" dominant-baseline="central">0</text>
+      </g>
+      <g class="cell" data-bit="2" tabindex="0" role="button" aria-label="切換位元 10">
+        <rect x="46" y="154" width="56" height="38" rx="2"/><rect class="ring" x="41" y="149" width="66" height="48"/>
+        <text class="bitnum" x="74" y="173" text-anchor="middle" dominant-baseline="central">0</text>
+      </g>
+      <g class="cell" data-bit="3" tabindex="0" role="button" aria-label="切換位元 11">
+        <rect x="46" y="216" width="56" height="38" rx="2"/><rect class="ring" x="41" y="211" width="66" height="48"/>
+        <text class="bitnum" x="74" y="235" text-anchor="middle" dominant-baseline="central">1</text>
+      </g>
+
+      <path id="mux1" class="mux" d="M150,41 L176,59 L176,101 L150,119 Z"/>
+      <path id="mux2" class="mux" d="M150,165 L176,183 L176,225 L150,243 Z"/>
+      <path id="mux3" class="mux" d="M250,70 L276,92 L276,192 L250,214 Z"/>
+
+      <path class="stub" d="M163,110 V128"/>
+      <text id="selB1" class="lbl-i" x="163" y="140" text-anchor="middle">B=0</text>
+      <path class="stub" d="M163,234 V252"/>
+      <text id="selB2" class="lbl-i" x="163" y="264" text-anchor="middle">B=0</text>
+      <path class="stub" d="M263,203 V223"/>
+      <text id="selA" class="lbl-i" x="263" y="235" text-anchor="middle">A=0</text>
+
+      <text id="lutOutTxt" class="bitnum" x="370" y="142" text-anchor="middle" dominant-baseline="central">0</text>
+    </svg>
+
+    <div class="ctl">
+      <label class="sw">A<span class="pill" data-in="A"><span data-v="0">0</span><span data-v="1">1</span></span></label>
+      <label class="sw">B<span class="pill" data-in="B"><span data-v="0">0</span><span data-v="1">1</span></span></label>
+    </div>
+    <div class="presets">
+      <button class="btn" data-preset="0001">AND</button>
+      <button class="btn" data-preset="0111">OR</button>
+      <button class="btn" data-preset="0110">XOR</button>
+      <button class="btn" data-preset="1110">NAND</button>
+      <button class="btn" data-preset="1000">NOR</button>
+      <button class="btn" data-preset="0011">直接輸出 A</button>
+    </div>
+    <div class="readout">目前這顆 LUT 是：<b id="fnName">常數 0</b></div>
+    <table>
+      <thead><tr><th>A</th><th>B</th><th>查到的 SRAM 格</th><th>輸出</th></tr></thead>
+      <tbody id="tt"></tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <p><b>電線怎麼走：</b>A 和 B 不是拿去「運算」的，它們是<b>地址線</b>。B 控制第一層選擇器（左右各挑一個），A 控制第二層（上下挑一邊）。兩層挑完，剛好指到 4 格裡的其中一格，那格存的值就直接被送出去。</p>
+    <p>用程式的講法，整顆 LUT 就是這一行：</p>
+    <p><code>output = table[ (A&lt;&lt;1) | B ];</code></p>
+    <p>所以你在 Verilog 寫 <code>assign y = a &amp; b;</code>，合成工具做的事不是「找一顆 AND 閘」，而是<b>算出 <code>0001</code> 這四個 bit，開機時塞進這四個 SRAM cell</b>。</p>
+    <p>要改成 XOR？不用動一根線，只要把 SRAM 改成 <code>0110</code> 就好。這就是「可程式化」的真正意思 —— 電路的形狀是資料，不是硬體。</p>
+  </div>
+</section>
+
+<section>
+  <h2><b>3</b>Flip-Flop：把時間加進來</h2>
+  <p class="h2note">LUT 的輸出接到 FF 的 D 腳。撥 A / B 看 D 馬上變，但 Q 要等你按 CLK。</p>
+
+  <div class="pane">
+    <svg class="fig" viewBox="0 0 420 250" role="img" aria-label="LUT 輸出接到 Flip-Flop">
+      <text class="lbl-zh" x="20" y="36">從 LUT 來</text>
+      <path id="wF" class="wire act" d="M20,55 H150"/>
+      <circle class="dot" cx="30" cy="55" r="3.5"/>
+      <path id="wBy" class="wire act" d="M30,55 V160 H300"/>
+      <text class="lbl-zh" x="120" y="152">不經過 FF，直接出去</text>
+
+      <rect class="box" x="150" y="25" width="80" height="90"/>
+      <text class="lbl-i" x="158" y="55" dominant-baseline="central">D</text>
+      <text class="lbl-i" x="222" y="55" text-anchor="end" dominant-baseline="central">Q</text>
+      <text class="lbl-zh" x="190" y="38" text-anchor="middle">FF</text>
+      <text id="qNum" class="bitnum" x="190" y="80" text-anchor="middle" dominant-baseline="central" style="font-size:24px">0</text>
+
+      <path class="wire act" d="M45,90 H150"/>
+      <path class="dot" d="M150,84 L162,90 L150,96 Z"/>
+      <text class="lbl-i" x="41" y="90" text-anchor="end" dominant-baseline="central">CLK</text>
+
+      <path id="wQ" class="wire" d="M230,55 H300"/>
+      <path id="mux4" class="mux" d="M300,30 L326,52 L326,163 L300,185 Z"/>
+      <path class="stub" d="M313,174 V198"/>
+      <text id="selM" class="lbl-i" x="313" y="212" text-anchor="middle">設定</text>
+      <text class="lbl-zh" x="313" y="232" text-anchor="middle">← 也是一個 SRAM bit</text>
+
+      <path id="wOut" class="wire act" d="M326,107 H358"/>
+      <text id="outNum" class="bitnum" x="378" y="107" text-anchor="middle" dominant-baseline="central">0</text>
+      <text class="lbl-zh" x="378" y="86" text-anchor="middle">輸出</text>
+    </svg>
+
+    <div class="ctl">
+      <button class="btn clk" id="clkBtn">▲ 送一個 CLK</button>
+      <label class="sw">輸出走法<span class="pill" data-in="M"><span data-v="0">直接出</span><span data-v="1">經過 FF</span></span></label>
+    </div>
+    <div class="readout">D（LUT 現在算出來的）＝ <b id="dVal">0</b>　·　Q（FF 上次記住的）＝ <b id="qVal">0</b></div>
+  </div>
+
+  <div class="note">
+    <p><b>試一次就懂了：</b>把「輸出走法」切到<b>經過 FF</b>，然後回到上一段撥 A 或 B。你會看到 D 立刻變，但 Q 完全不動 —— 直到你按下 CLK，Q 才「啪」一下跳成 D 的值。</p>
+    <p>這就是 FF 的全部功能：<b>把值凍在原地，等時脈叫它才更新。</b>沒有 FF，訊號會像瀑布一樣一路衝到底，你完全沒辦法控制順序。有了 FF，電路才有「一拍一拍」的節奏，才能做計數器、狀態機、pipeline。</p>
+    <p>對應到程式：<code>assign</code> 是 LUT（馬上生效），<code>always @(posedge clk) q &lt;= d;</code> 是 FF（下一拍才生效）。</p>
+    <p>注意那個<b>輸出選擇器</b>：要不要經過 FF，也是由一個 SRAM bit 決定的。你在 RTL 裡寫 <code>assign</code> 還是 <code>always</code>，最後就變成這一個 bit 的 0 或 1。</p>
+  </div>
+</section>
+
+<section>
+  <h2><b>4</b>電線怎麼走：繞線</h2>
+  <p class="h2note">一顆 cell 沒用，重點是幾十萬顆怎麼互相接。</p>
+
+  <div class="pane">
+    <svg class="fig" viewBox="0 0 420 280" role="img" aria-label="兩顆邏輯單元透過連接盒與開關盒連接">
+      <path class="wire" d="M20,140 H400 M20,152 H400"/>
+      <path class="wire" d="M200,20 V260 M212,20 V260"/>
+      <rect class="box" x="20" y="45" width="104" height="66"/>
+      <text class="lbl-i" x="72" y="70" text-anchor="middle">LUT + FF</text>
+      <text class="lbl-zh" x="72" y="90" text-anchor="middle">邏輯單元 1</text>
+      <rect class="box" x="276" y="180" width="104" height="66"/>
+      <text class="lbl-i" x="328" y="205" text-anchor="middle">LUT + FF</text>
+      <text class="lbl-zh" x="328" y="225" text-anchor="middle">邏輯單元 2</text>
+      <path class="wire act hi" d="M124,78 H206 V213 H276"/>
+      <rect x="196" y="68" width="20" height="20" fill="#fff" stroke="var(--hot)" stroke-width="1.6"/>
+      <rect x="190" y="130" width="32" height="32" fill="#fff" stroke="var(--ink)" stroke-width="1.8"/>
+      <rect x="196" y="203" width="20" height="20" fill="#fff" stroke="var(--hot)" stroke-width="1.6"/>
+      <path class="stub" d="M216,58 H288"/>
+      <text class="lbl-zh" x="292" y="58" dominant-baseline="central">連接盒</text>
+      <path class="stub" d="M190,146 H120"/>
+      <text class="lbl-zh" x="116" y="146" text-anchor="end" dominant-baseline="central">開關盒</text>
+      <path class="stub" d="M196,213 H120"/>
+      <text class="lbl-zh" x="116" y="213" text-anchor="end" dominant-baseline="central">連接盒</text>
+      <text class="lbl-zh" x="210" y="274" text-anchor="middle">灰色細線＝沒被用到的空線道</text>
+    </svg>
+  </div>
+
+  <div class="note">
+    <p>FPGA 內部像一張<b>棋盤格的市區道路</b>。邏輯單元是建築物，中間縱橫的細線是預先鋪好的線道，永遠都在那裡，用不用是另一回事。</p>
+    <ul>
+      <li><b>連接盒（connection box）</b>：決定這顆 cell 的腳，要不要「上匝道」接到某一條線道。</li>
+      <li><b>開關盒（switch box）</b>：路口。決定訊號到這裡是直走、左轉、右轉，還是停。</li>
+    </ul>
+    <p>而 —— 這是整篇最重要的一句話 —— <b>每一個連接盒和開關盒裡的每一個開關，背後都各接著一個 SRAM cell。</b>那個 bit 是 1，開關就導通；是 0 就斷開。</p>
+    <p>所以繞線佔掉 FPGA 晶片面積的 <b>60～80%</b>，也是為什麼 FPGA 的 fabric 只跑得到幾百 MHz：訊號要一路穿過這些開關，每一個都是電阻和電容。同一份 RTL 擺放位置不同，跑出來的最高頻率就會不一樣，這就是 timing closure 難搞的原因。</p>
+  </div>
+</section>
+
+<section>
+  <h2><b>5</b>兩套線，不要搞混</h2>
+  <p class="h2note">這是初學最容易卡住的地方。</p>
+
+  <div class="pane">
+    <svg class="fig" viewBox="0 0 420 150" role="img" aria-label="設定鏈">
+      <text class="lbl-zh" x="20" y="20">開機時：bitstream 從外部 Flash 一路推進來</text>
+      <path class="stub" d="M8,60 H20"/>
+      <g fill="#fff" stroke="var(--pale)" stroke-width="1.5">
+        <rect x="20" y="46" width="30" height="30" rx="2"/><rect x="76" y="46" width="30" height="30" rx="2"/>
+        <rect x="132" y="46" width="30" height="30" rx="2"/><rect x="188" y="46" width="30" height="30" rx="2"/>
+        <rect x="244" y="46" width="30" height="30" rx="2"/><rect x="300" y="46" width="30" height="30" rx="2"/>
+        <rect x="356" y="46" width="30" height="30" rx="2"/>
+      </g>
+      <path class="stub" d="M50,61 H76 M106,61 H132 M162,61 H188 M218,61 H244 M274,61 H300 M330,61 H356 M386,61 H400"/>
+      <g class="wire act" fill="none">
+        <path d="M35,46 V26"/><path d="M91,46 V26"/><path d="M147,46 V26"/><path d="M203,46 V26"/>
+        <path d="M259,46 V26"/><path d="M315,46 V26"/><path d="M371,46 V26"/>
+      </g>
+      <text class="lbl-zh" x="210" y="100" text-anchor="middle">每一格控制一個 LUT 值、一個選擇器、或一個繞線開關</text>
+      <text class="lbl-zh" x="210" y="126" text-anchor="middle">推完就固定不動，直到下次重新開機</text>
+    </svg>
+  </div>
+
+  <div class="note">
+    <ul>
+      <li><b>設定線（configuration）</b>：只在開機那幾十毫秒動一次。像一條超長的 shift register，把 bitstream 一格一格推進去，推滿整顆晶片的 SRAM。推完就永遠不動了。</li>
+      <li><b>資料線（signal path）</b>：就是你 RTL 裡真正跑的訊號，每個 clock 都在動。</li>
+    </ul>
+    <p>設定線決定了「電路長什麼樣」，資料線是「電路在跑什麼」。你寫的 Verilog 最後變成的是<b>前者</b>。</p>
+  </div>
+</section>
+
+<section>
+  <h2><b>6</b>SPI Flash 是什麼？</h2>
+  <p class="h2note">板子上那顆不起眼的小晶片，沒有它 FPGA 開不了機。</p>
+
+  <div class="pane">
+    <svg class="fig" viewBox="0 0 420 250" role="img" aria-label="FPGA 與 SPI Flash 的四條連線">
+      <text class="lbl-zh" x="210" y="16" text-anchor="middle">同一塊 PCB 上</text>
+      <rect x="14" y="30" width="392" height="200" fill="none" stroke="var(--pale)" stroke-width="1.4" stroke-dasharray="5 4" rx="3"/>
+
+      <rect class="box" x="40" y="70" width="130" height="130"/>
+      <text class="lbl-i" x="105" y="120" text-anchor="middle" style="font-size:15px">FPGA</text>
+      <text class="lbl-zh" x="105" y="146" text-anchor="middle">裡面全是 SRAM</text>
+      <text class="lbl-zh" x="105" y="166" text-anchor="middle">斷電就空了</text>
+
+      <rect class="box" x="288" y="102" width="76" height="66"/>
+      <text class="lbl-i" x="326" y="128" text-anchor="middle">Flash</text>
+      <text class="lbl-zh" x="326" y="148" text-anchor="middle">非揮發</text>
+      <g stroke="var(--ink)" stroke-width="1.6">
+        <path d="M288,114 H278 M288,128 H278 M288,142 H278 M288,156 H278"/>
+        <path d="M364,114 H374 M364,128 H374 M364,142 H374 M364,156 H374"/>
+      </g>
+      <text class="lbl-zh" x="326" y="188" text-anchor="middle">8 腳、約 5×6 mm</text>
+
+      <path class="wire act" d="M170,92 H278"/>
+      <text class="lbl-i" x="224" y="84" text-anchor="middle">CS</text>
+      <path class="wire act" d="M170,118 H278"/>
+      <text class="lbl-i" x="224" y="110" text-anchor="middle">SCK</text>
+      <path class="wire act" d="M170,144 H278"/>
+      <text class="lbl-i" x="224" y="136" text-anchor="middle">MOSI</text>
+      <path class="wire act hi" d="M170,170 H278"/>
+      <text class="lbl-i" x="224" y="162" text-anchor="middle">MISO</text>
+      <text class="lbl-zh" x="224" y="212" text-anchor="middle">bitstream 從這條線一位一位讀回來 →</text>
+    </svg>
+  </div>
+
+  <div class="note">
+    <p>拆成兩個字看就清楚了。</p>
+    <p><b>Flash＝一種斷電後資料還在的記憶體。</b>跟 SRAM 剛好相反：SRAM 快但斷電就忘，Flash 慢但記得住。你的 SSD、隨身碟、手機儲存空間裡面全是 flash，只是容量大得多。</p>
+    <p><b>SPI＝一種超簡單的序列通訊介面</b>（Serial Peripheral Interface）。整條匯流排只要<b>四條線</b>：</p>
+    <ul>
+      <li><code>CS</code> — 選中訊號，告訴對方「我要跟你講話了」</li>
+      <li><code>SCK</code> — 時脈，兩邊靠它對拍</li>
+      <li><code>MOSI</code> — 主控送出去的資料線</li>
+      <li><code>MISO</code> — 對方回傳的資料線</li>
+    </ul>
+    <p>所以 <b>SPI Flash 就是「用這四條線存取的快閃記憶體晶片」</b>。板子上那顆小小的 8 腳晶片，大概 5×6 mm，一顆幾十塊台幣。</p>
+
+    <h3>FPGA 為什麼一定要它</h3>
+    <p>因為 FPGA 的設定值全部存在 SRAM 裡，<b>一斷電就全空了</b>。所以旁邊必須放一顆 SPI Flash 把 bitstream 存起來，每次上電時 FPGA 自己去把它一位一位讀回來，灌滿全部的 SRAM，然後才開始工作。</p>
+    <p>這也回答了「為什麼 FPGA 開機要幾十到幾百毫秒」—— 幾 MB 到幾百 MB 的 bitstream，要透過那一條 MISO 線慢慢搬進來。</p>
+
+    <h3>那為什麼不乾脆用 Flash 做整顆 FPGA？</h3>
+    <p>因為 flash cell 讀取速度慢、需要額外的特殊製程（貴），而且寫入次數有限。SRAM 用標準邏輯製程就能做，又快。所以主流選擇是「用 SRAM 跑、用 Flash 存」。</p>
+    <p>不過確實有例外：<b>Microchip PolarFire 和 Lattice 的部分系列是 flash-based FPGA</b>，設定直接存在晶片內，上電就能用、不需要外掛 flash。這也是上一份文件裡提到 CPLD「開機即用」的同一個原理。</p>
+    <p>順帶一提，SPI Flash 這個市場的主要供應商是<b>華邦（Winbond）和旺宏（Macronix）</b>，都是台灣公司。</p>
+  </div>
+</section>
+
+<section>
+  <h2><b>7</b>真實的尺寸</h2>
+  <p class="h2note">上面的例子是 2 輸入。真的 FPGA 大得多。</p>
+
+  <div class="pane">
+    <div class="scale">
+      <div class="row"><span class="k">2 輸入</span><span class="dots" id="d2"></span><span class="k" style="width:auto">4 bits</span></div>
+      <div class="row"><span class="k">4 輸入</span><span class="dots" id="d4"></span><span class="k" style="width:auto">16 bits</span></div>
+      <div class="row"><span class="k">6 輸入</span><span class="dots lite" id="d6"></span><span class="k" style="width:auto">64 bits</span></div>
+    </div>
+  </div>
+
+  <div class="note">
+    <p>N 個輸入的 LUT 需要 <code>2^N</code> 個 SRAM cell。現代 FPGA 主流是 <b>6 輸入 LUT</b>（64 bits），並且可以拆成兩個 5 輸入 LUT 共用。</p>
+    <p>然後把這樣一顆邏輯單元<b>複製十萬到幾百萬份</b>，中間全部用第 4 段那張棋盤格繞線連起來 —— 這就是一顆 FPGA。一顆中階的 Artix-7 大約有 10 萬顆邏輯單元；高階的 Virtex UltraScale+ 有 380 萬顆。</p>
+  </div>
+</section>
+
+<footer>
+  一句話總結：SRAM 存設定、LUT 拿設定當查表算組合邏輯、FF 把結果按時脈鎖住，繞線把它們接起來 —— 而繞線本身也是靠 SRAM 控制的，這些設定全部來自開機時從 SPI Flash 讀進來的 bitstream。整顆 FPGA 就是這幾件事重複幾百萬次。
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var bits=[0,0,0,1], A=0, B=0, Q=0, useFF=0;
+  var FN={
+    '0000':'常數 0','1111':'常數 1','0001':'AND（A 且 B）','0111':'OR（A 或 B）',
+    '0110':'XOR（不一樣才是 1）','1001':'XNOR（一樣才是 1）','1110':'NAND','1000':'NOR',
+    '0011':'直接輸出 A','0101':'直接輸出 B','1100':'NOT A','1010':'NOT B',
+    '0010':'A 且 非B','0100':'非A 且 B','1101':'非A 或 B','1011':'A 或 非B'
+  };
+  var cells=[].slice.call(document.querySelectorAll('.cell[data-bit]'));
+  var tt=document.getElementById('tt');
+  var demoCell=document.getElementById('demoCell'), demoBit=1;
+
+  function W(id,act,val){
+    var e=document.getElementById(id);
+    e.setAttribute('class','wire'+(act?' act':'')+(act&&val?' hi':''));
+  }
+  function M(id,act){
+    document.getElementById(id).setAttribute('class','mux'+(act?' act':''));
+  }
+  function buildTable(){
+    tt.innerHTML='';
+    for(var i=0;i<4;i++){(function(i){
+      var a=i>>1,b=i&1, tr=document.createElement('tr');
+      tr.innerHTML='<td>'+a+'</td><td>'+b+'</td><td>'+a+''+b+'</td><td class="'+(bits[i]?'v1':'')+'">'+bits[i]+'</td>';
+      tr.addEventListener('click',function(){bits[i]=bits[i]?0:1;render();});
+      if(i===(A*2+B)) tr.className='now';
+      tt.appendChild(tr);
+    })(i);}
+  }
+  function render(){
+    var idx=A*2+B, out=bits[idx];
+    cells.forEach(function(g,i){
+      g.setAttribute('class','cell'+(bits[i]?' one':'')+(i===idx?' sel':''));
+      g.querySelector('.bitnum').textContent=bits[i];
+    });
+    W('w0',idx===0,bits[0]); W('w1',idx===1,bits[1]);
+    W('w2',idx===2,bits[2]); W('w3',idx===3,bits[3]);
+    W('wm1',A===0,bits[B]); W('wm2',A===1,bits[2+B]); W('wout',true,out);
+    M('mux1',A===0); M('mux2',A===1); M('mux3',true);
+    document.getElementById('selB1').textContent='B='+B;
+    document.getElementById('selB2').textContent='B='+B;
+    document.getElementById('selA').textContent='A='+A;
+    var lo=document.getElementById('lutOutTxt');
+    lo.textContent=out; lo.setAttribute('fill', out?'#C2352B':'#16232E');
+    document.getElementById('fnName').textContent = FN[bits.join('')] || '自訂邏輯函數';
+
+    W('wF',true,out); W('wBy',!useFF,out); W('wQ',!!useFF,Q);
+    var fin = useFF?Q:out;
+    W('wOut',true,fin); M('mux4',true);
+    var qn=document.getElementById('qNum');
+    qn.textContent=Q; qn.setAttribute('fill', Q?'#C2352B':'#16232E');
+    var on=document.getElementById('outNum');
+    on.textContent=fin; on.setAttribute('fill', fin?'#C2352B':'#16232E');
+    document.getElementById('dVal').textContent=out;
+    document.getElementById('qVal').textContent=Q;
+    document.getElementById('selM').textContent = useFF?'經過 FF':'直接出';
+
+    document.querySelectorAll('.pill').forEach(function(p){
+      var k=p.dataset.in, v = k==='A'?A : k==='B'?B : useFF;
+      p.querySelectorAll('span').forEach(function(s){
+        var on=(+s.dataset.v)===v;
+        s.className = on ? ('on'+(k!=='M'&&v?' hi':'')) : '';
+      });
+    });
+    buildTable();
+  }
+  cells.forEach(function(g){
+    function t(){ var i=+g.dataset.bit; bits[i]=bits[i]?0:1; render(); }
+    g.addEventListener('click',t);
+    g.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();t();} });
+  });
+  document.querySelectorAll('.pill span').forEach(function(s){
+    s.addEventListener('click',function(){
+      var k=s.parentNode.dataset.in, v=+s.dataset.v;
+      if(k==='A')A=v; else if(k==='B')B=v; else useFF=v;
+      render();
+    });
+  });
+  document.querySelectorAll('[data-preset]').forEach(function(b){
+    b.addEventListener('click',function(){ bits=b.dataset.preset.split('').map(Number); render(); });
+  });
+  document.getElementById('clkBtn').addEventListener('click',function(){ Q=bits[A*2+B]; render(); });
+  function td(){
+    demoBit=demoBit?0:1;
+    demoCell.setAttribute('class','cell'+(demoBit?' one':''));
+    demoCell.querySelector('.bitnum').textContent=demoBit;
+  }
+  demoCell.addEventListener('click',td);
+  demoCell.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();td();} });
+  [['d2',4],['d4',16],['d6',64]].forEach(function(p){
+    var el=document.getElementById(p[0]),s='';
+    for(var i=0;i<p[1];i++) s+='<i></i>';
+    el.innerHTML=s;
+  });
+  render();
+})();
+</script>
+</body>
+</html>
