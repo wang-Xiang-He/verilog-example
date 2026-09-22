@@ -1,0 +1,80 @@
+m255
+K4
+z2
+!s11f vlog 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/a9100/Desktop/verilog-example/115_1_FPGA_Verilog_PDF/pptx_output/week03/02_FullAdd4
+vFullAdd
+Z1 !s110 1790090302
+!i10b 1
+!s100 J7T@?Wz`;5?6BZ6Z:XB0=3
+Z2 !s11b Dg1SIo80bB@j0V0VzS_@n1
+I<<O0[7a]Sm]koC:;U4U202
+Z3 VDg1SIo80bB@j0V0VzS_@n1
+R0
+Z4 w1790083582
+8FullAdd.v
+FFullAdd.v
+!i122 4
+L0 6 12
+Z5 OV;L;2020.1;71
+r1
+!s85 0
+31
+Z6 !s108 1790090302.000000
+!s107 FullAdd4_tb.v|FullAdd4.v|FullAdd.v|
+Z7 !s90 -reportprogress|300|FullAdd.v|FullAdd4.v|FullAdd4_tb.v|
+!i113 1
+Z8 tCvgOpt 0
+n@full@add
+vFullAdd4
+R1
+!i10b 1
+!s100 OcnQ2UDK?j?PPH]2VnAP_1
+R2
+I>N5Y<<RBY3_[?m[`V<l8@1
+R3
+R0
+R4
+8FullAdd4.v
+FFullAdd4.v
+!i122 4
+L0 9 16
+R5
+r1
+!s85 0
+31
+R6
+Z9 !s107 FullAdd4_tb.v|FullAdd4.v|FullAdd.v|
+R7
+!i113 1
+R8
+n@full@add4
+vFullAdd4_tb
+R1
+!i10b 1
+!s100 <=?1>1BUc_3E<NM<[U^nm1
+R2
+I]Yh[H8P39Z7?K7Wmg==m30
+R3
+R0
+R4
+8FullAdd4_tb.v
+FFullAdd4_tb.v
+!i122 4
+L0 6 28
+R5
+r1
+!s85 0
+31
+R6
+R9
+R7
+!i113 1
+R8
+n@full@add4_tb
