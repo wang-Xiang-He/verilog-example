@@ -1,0 +1,6 @@
+# vsim.wlf opened as dataset "vsim"
+add wave -r /*
+quit sim
+# unknown switch: sim
+quit -sim
+quit

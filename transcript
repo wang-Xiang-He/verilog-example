@@ -1,0 +1,8 @@
+# vsim -c -do "run -all; quit -f" work.FullAdd4_tb 
+# Start time: 23:13:46 on Sep 23,2026
+# ** Error: (vsim-3170) Could not find 'FullAdd4_tb'.
+#         Searched libraries:
+#             C:/Users/a9100/Desktop/verilog-example/work
+# Error loading design
+# End time: 23:13:46 on Sep 23,2026, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0

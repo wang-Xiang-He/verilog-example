@@ -1,5 +1,7 @@
 # run.do : ModelSim script for 01_FullAdd
 # Usage  : in the Transcript window, cd to this folder, then type:  do run.do
+# vsim -c -do "do run.do; quit -f" 
+# vsim -view vsim.wlf
 
 vlib work
 vlog FullAdd.v FullAdd_tb.v

@@ -10,7 +10,7 @@ z2
 cModel Technology
 Z0 dC:/Users/a9100/Desktop/verilog-example/115_1_FPGA_Verilog_PDF/pptx_output/week03/02_FullAdd4
 vFullAdd
-Z1 !s110 1790090302
+Z1 !s110 1790176973
 !i10b 1
 !s100 J7T@?Wz`;5?6BZ6Z:XB0=3
 Z2 !s11b Dg1SIo80bB@j0V0VzS_@n1
@@ -20,15 +20,15 @@ R0
 Z4 w1790083582
 8FullAdd.v
 FFullAdd.v
-!i122 4
+!i122 6
 L0 6 12
 Z5 OV;L;2020.1;71
 r1
 !s85 0
 31
-Z6 !s108 1790090302.000000
+Z6 !s108 1790176973.000000
 !s107 FullAdd4_tb.v|FullAdd4.v|FullAdd.v|
-Z7 !s90 -reportprogress|300|FullAdd.v|FullAdd4.v|FullAdd4_tb.v|
+Z7 !s90 FullAdd.v|FullAdd4.v|FullAdd4_tb.v|
 !i113 1
 Z8 tCvgOpt 0
 n@full@add
@@ -43,7 +43,7 @@ R0
 R4
 8FullAdd4.v
 FFullAdd4.v
-!i122 4
+!i122 6
 L0 9 16
 R5
 r1
@@ -66,7 +66,7 @@ R0
 R4
 8FullAdd4_tb.v
 FFullAdd4_tb.v
-!i122 4
+!i122 6
 L0 6 28
 R5
 r1
