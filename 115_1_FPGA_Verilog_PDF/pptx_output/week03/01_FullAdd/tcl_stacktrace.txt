@@ -1,0 +1,7 @@
+Wed Sep 23 17:16:35 CST 2026
+Trace back: can't read "map(?)": no such element in array
+    while executing
+".vcop Eval Layout::ResetLayouts"
+    (menu invoke)
+  <2:D:/intelFPGA/20.1/modelsim_ase/win32aloem/tk8.6/bgerror.tcl:106: ::tkerror {can't read "map(?)": no such element in array}
+  <1:eval:1: ::tk::dialog::error::bgerror {can't read "map(?)": no such element in array}
