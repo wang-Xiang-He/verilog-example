@@ -3,14 +3,13 @@
 // =====================================================================
 // Register8：8 位元暫存器（在時脈正緣存入 data）
 // =====================================================================
-module Register8 (Clock, Reset, data, q);
-    input        Clock, Reset;
-    input  [7:0] data;
-    output [7:0] q;
-    reg    [7:0] q;                 // 在 always 裡被賦值 → 必須是 reg
-
-    always @(posedge Clock)         // posedge = 正緣（時脈由 0 變 1 的瞬間）
-    begin
+module Register8 (
+    input            Clock,
+    input            Reset,
+    input      [7:0] data,
+    output reg [7:0] q              // 在 always 裡被賦值 → 必須是 reg，直接寫在埠宣告裡
+);
+    always @(posedge Clock) begin   // posedge = 正緣（時脈由 0 變 1 的瞬間）
         if (Reset)
             q <= 8'b0;              // 同步重置
         else

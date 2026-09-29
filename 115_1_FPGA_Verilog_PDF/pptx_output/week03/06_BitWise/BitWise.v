@@ -7,11 +7,12 @@
 //   ~^ 縮減 XNOR：1 的個數為偶數 → 1（偶同位 even parity）
 //   &  縮減 AND ：全部都是 1     → 1
 // =====================================================================
-module BitWise (input_bus, even, odd, all_one);
-    input  [7:0] input_bus;
-    output       even, odd, all_one;
-    wire         even, odd, all_one;
-
+module BitWise (
+    input  [7:0] input_bus,
+    output       even,
+    output       odd,
+    output       all_one
+);
     assign odd     =  ^ input_bus;   // 奇數個 1 則為 1
     assign even    = ~^ input_bus;   // 偶數個 1 則為 1
     assign all_one =  & input_bus;   // 全部為 1 則為 1

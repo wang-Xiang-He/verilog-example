@@ -5,15 +5,13 @@
 //   swap = 1：word = {byte2, byte1}（byte2 放高 4 位元）
 //   swap = 0：word = {byte1, byte2}（byte1 放高 4 位元）
 // =====================================================================
-module Concate (swap, byte1, byte2, word);
-    input        swap;
-    input  [3:0] byte1;
-    input  [3:0] byte2;
-    output [7:0] word;
-    reg    [7:0] word;
-
-    always @(swap or byte1 or byte2)
-    begin
+module Concate (
+    input            swap,
+    input      [3:0] byte1,
+    input      [3:0] byte2,
+    output reg [7:0] word
+);
+    always @(*) begin                // 講義寫 @(swap or byte1 or byte2)；@(*) 自動列出所有輸入
         if (swap)
             word = {byte2, byte1};   // 等於 byte2 << 4 + byte1
         else

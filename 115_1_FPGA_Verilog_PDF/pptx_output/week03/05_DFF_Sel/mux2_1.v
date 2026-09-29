@@ -4,9 +4,11 @@
 // mux2_1：1 位元 2 對 1 多工器
 //   ※ 講義沒有列出這個模組，這裡依方塊圖自行補上：s = 0 → ma；s = 1 → mb
 // =====================================================================
-module mux2_1 (ma, mb, s, mout);
-    input  ma, mb, s;
-    output mout;
-
+module mux2_1 (
+    input  ma,
+    input  mb,
+    input  s,
+    output mout
+);
     assign mout = s ? mb : ma;
 endmodule

@@ -39,6 +39,7 @@ endmodule
 // =====================================================================
 // 【預期輸出】ModelSim 的 Transcript 視窗（每行前面會多一個 # 號）
 // =====================================================================
+//   t=0  Reset=1 Sel=1 Rot=0  Reg_Out=xxxxxxxx  out1=xxxxxxxx  out2=xxxxxxxx   same   <- Clock 由 x 變 0 也算負緣；暫存器還沒遇到正緣，所以是 x
 //   t=10  Reset=1 Sel=1 Rot=0  Reg_Out=00000000  out1=00000000  out2=00000000   same
 //   t=20  Reset=0 Sel=1 Rot=0  Reg_Out=10000001  out1=00000000  out2=00000000   same
 //   t=30  Reset=0 Sel=1 Rot=0  Reg_Out=10000001  out1=10000001  out2=10000001   same

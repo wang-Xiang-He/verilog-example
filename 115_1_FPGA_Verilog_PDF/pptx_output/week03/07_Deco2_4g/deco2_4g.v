@@ -9,10 +9,12 @@
 //   1 1 |  1  0  0  0
 //   「高態輸出」= 被選中的那一條輸出為 1
 // =====================================================================
-module deco2_4g (a, b, y);
-    input        a, b;
-    output [3:0] y;
-    wire         an, bn;           // a、b 的反相
+module deco2_4g (
+    input        a,
+    input        b,
+    output [3:0] y
+);
+    wire an, bn;                   // a、b 的反相
 
     // Verilog 內建邏輯閘（primitive）：第一個埠是輸出，後面是輸入
     not (an, a);
@@ -23,3 +25,18 @@ module deco2_4g (a, b, y);
     and (y[2], an, b );            // b=1, a=0
     and (y[3], a,  b );            // b=1, a=1
 endmodule
+
+
+// module deco2_4_dataflow (
+//     input        a,
+//     input        b,
+//     output [3:0] y
+// );
+
+//     // 透過連續賦值（Continuous Assignment）直接描述布林邏輯
+//     assign y[0] = ~a & ~b;   // 對應 b=0, a=0
+//     assign y[1] =  a & ~b;   // 對應 b=0, a=1
+//     assign y[2] = ~a &  b;   // 對應 b=1, a=0
+//     assign y[3] =  a &  b;   // 對應 b=1, a=1
+
+// endmodule

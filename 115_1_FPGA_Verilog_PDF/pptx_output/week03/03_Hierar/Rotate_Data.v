@@ -6,14 +6,14 @@
 //   Left_Rotate = 1 → q 向左旋轉 1 位元（最高位繞回最低位）
 //   否則            → 從輸入埠 data 載入資料到 q
 // =====================================================================
-module Rotate_Data (Clock, Reset, Left_Rotate, data, q);
-    input        Clock, Reset, Left_Rotate;
-    input  [7:0] data;
-    output [7:0] q;
-    reg    [7:0] q;
-
-    always @(posedge Clock)
-    begin
+module Rotate_Data (
+    input            Clock,
+    input            Reset,
+    input            Left_Rotate,
+    input      [7:0] data,
+    output reg [7:0] q
+);
+    always @(posedge Clock) begin
         if (Reset)
             q <= 8'b0;
         else if (Left_Rotate)

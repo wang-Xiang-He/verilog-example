@@ -5,11 +5,16 @@
 //   .子模組埠名(外部訊號)，埠的順序就無所謂了
 //   同一個實例裡「依順序」和「依名稱」不能混用，但不同實例可以各用一種
 // =====================================================================
-module Top2 (Clock, Reset, Sel, Left_Rotate, a, b, out);
-    input        Clock, Reset, Sel, Left_Rotate;
-    input  [7:0] a, b;
-    output [7:0] out;
-    wire   [7:0] Mux_Out, Reg_Out;
+module Top2 (
+    input        Clock,
+    input        Reset,
+    input        Sel,
+    input        Left_Rotate,
+    input  [7:0] a,
+    input  [7:0] b,
+    output [7:0] out
+);
+    wire [7:0] Mux_Out, Reg_Out;
 
     // 依名稱：故意打亂順序也沒關係
     Mux         Mux_1         (.out(Mux_Out), .Sel(Sel), .b(b), .a(a));

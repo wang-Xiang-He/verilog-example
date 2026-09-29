@@ -49,6 +49,10 @@ Verilog 硬體描述語言 (I) — 講義範例（ModelSim 版）
                      檔案：monitest_tb.v
 
 與講義不同之處：
+  - 所有電路模組的埠宣告改用 Verilog-2001（ANSI）寫法，例如 output reg [7:0] q 直接寫在埠列表裡；
+    講義是 Verilog-1995 舊寫法（先列埠名，再分別宣告 input / output / reg）。埠順序不變，功能相同
+  - 有 parameter 的模組改寫成 module 名稱 #(parameter ...) (...) 的形式
+  - 組合邏輯 always 的敏感清單改用 @(*)（講義手動列出，例如 @(SignExtend or Word)）
   - 正反器 / 暫存器的 always 區塊改用非阻隔式賦值 <=（講義用 =），原因寫在 03_Hierar/Register8.v
   - FullAdd4 補上講義漏寫的內部進位 wire 宣告
   - 05_DFF_Sel 的 mux2_1 講義沒有列出，依方塊圖自行補上
