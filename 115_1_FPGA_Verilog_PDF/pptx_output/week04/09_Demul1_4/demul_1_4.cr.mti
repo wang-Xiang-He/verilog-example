@@ -1,0 +1,15 @@
+C:/Users/a9100/Desktop/verilog-example/115_1_FPGA_Verilog_PDF/pptx_output/week04/09_Demul1_4/demul1_4_if.v {1 {vlog -work work -stats=none C:/Users/a9100/Desktop/verilog-example/115_1_FPGA_Verilog_PDF/pptx_output/week04/09_Demul1_4/demul1_4_if.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module demul1_4_if
+
+Top level modules:
+	demul1_4_if
+
+} {} {}} C:/Users/a9100/Desktop/verilog-example/115_1_FPGA_Verilog_PDF/pptx_output/week04/09_Demul1_4/demul1_4_if_tb.v {1 {vlog -work work -stats=none C:/Users/a9100/Desktop/verilog-example/115_1_FPGA_Verilog_PDF/pptx_output/week04/09_Demul1_4/demul1_4_if_tb.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module demul1_4_if_tb
+
+Top level modules:
+	demul1_4_if_tb
+
+} {} {}}
